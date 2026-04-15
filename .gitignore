@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Editors
+.vscode/
+.idea/
+
+# Claude Code state (local only)
+.claude/
+
+# Build / scratch
+/tmp/
+*.log

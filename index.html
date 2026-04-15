@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Animal Escape">
+<meta name="theme-color" content="#ff6b9d">
+<title>Animal Escape! 🦊</title>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" sizes="180x180" href="icons/icon-180.png">
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="fw"></div>
+<div id="hf">👆</div>
+<div id="toast"></div>
+
+<!-- Tutorial -->
+<div id="tutorial">
+  <div id="tutBox">
+    <h2>🦊 Animal Escape!</h2>
+    <p>Help the animals find their way home!</p>
+    <div class="tutStep"><span class="emoji">👆</span><span>Tap an animal, then drag it</span></div>
+    <div class="tutStep"><span class="emoji">🚪</span><span>Slide it to the matching colored door</span></div>
+    <div class="tutStep"><span class="emoji">⭐</span><span>Get all animals home to win!</span></div>
+    <div class="tutStep"><span class="emoji">💡</span><span>Tap the lightbulb for a hint</span></div>
+    <button id="tutBtn">Let's Play! 🎮</button>
+  </div>
+</div>
+
+<!-- Level select -->
+<div id="ls">
+  <div id="lsb">
+    <div id="lsh">
+      <h2>🗺️ Choose Level</h2>
+      <button id="lsx" aria-label="Close">✕</button>
+    </div>
+    <div id="lgrid"></div>
+  </div>
+</div>
+
+<!-- Win overlay -->
+<div id="ov">
+  <div id="ob">
+    <div id="oe">🎉</div>
+    <div id="ot">Amazing!</div>
+    <div id="winStars"></div>
+    <div id="winMsg"></div>
+    <button id="obtn">Next Level ▶</button>
+  </div>
+</div>
+
+<!-- Top bar -->
+<div id="topBar">
+  <button id="soundBtn" aria-label="Toggle sound">🔊</button>
+  <div id="ll">Level 1</div>
+  <div id="moveCount"></div>
+</div>
+
+<!-- Game -->
+<div id="gc">
+  <div id="bw"><div id="board"></div></div>
+  <div id="ctrl">
+    <button class="btn" id="mapBtn" aria-label="Levels">🗺️</button>
+    <button class="btn" id="hb" aria-label="Hint">💡</button>
+    <button class="btn" id="resetBtn" aria-label="Reset level">🔄</button>
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

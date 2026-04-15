@@ -1,0 +1,1685 @@
+[
+  {
+    "cols": 7,
+    "rows": 6,
+    "label": "Level 1",
+    "blocks": [
+      { "id": "r1", "col": 1, "row": 1, "shape": [[0,0],[1,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 3, "row": 0, "shape": [[0,0],[1,0]], "color": "red", "dir": "free" },
+      { "id": "b1", "col": 2, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "free" },
+      { "id": "g1", "col": 3, "row": 2, "shape": [[0,0]], "color": "green", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 4 },
+      { "side": "left", "color": "green", "size": 1, "exit_row": 5 }
+    ]
+  },
+  {
+    "cols": 7,
+    "rows": 6,
+    "label": "Level 2",
+    "blocks": [
+      { "id": "y1", "col": 0, "row": 0, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "y2", "col": 1, "row": 4, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "y3", "col": 2, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "b1", "col": 4, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "free" },
+      { "id": "g1", "col": 1, "row": 3, "shape": [[0,0]], "color": "green", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "yellow", "size": 2, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 1 },
+      { "side": "top", "color": "green", "size": 1, "exit_col": 5 }
+    ]
+  },
+  {
+    "cols": 7,
+    "rows": 7,
+    "label": "Level 3",
+    "blocks": [
+      { "id": "b1", "col": 1, "row": 1, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "b2", "col": 5, "row": 2, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "r1", "col": 0, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "p1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "purple", "dir": "free" },
+      { "id": "o1", "col": 2, "row": 3, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "top", "color": "blue", "size": 3, "exit_col": 2 },
+      { "side": "right", "color": "red", "size": 1, "exit_row": 5 },
+      { "side": "bottom", "color": "purple", "size": 2, "exit_col": 0 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 4 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 7,
+    "label": "Level 4",
+    "blocks": [
+      { "id": "pu1", "col": 3, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "pu2", "col": 5, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "r1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "t1", "col": 3, "row": 3, "shape": [[0,0],[0,1]], "color": "teal", "dir": "v" },
+      { "id": "b1", "col": 1, "row": 2, "shape": [[0,0],[1,0]], "color": "blue", "dir": "free" },
+      { "id": "g1", "col": 0, "row": 5, "shape": [[0,0]], "color": "green", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "bottom", "color": "purple", "size": 2, "exit_col": 0 },
+      { "side": "right", "color": "red", "size": 1, "exit_row": 0 },
+      { "side": "top", "color": "teal", "size": 1, "exit_col": 3 },
+      { "side": "bottom", "color": "blue", "size": 2, "exit_col": 4 },
+      { "side": "top", "color": "green", "size": 1, "exit_col": 7 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 7,
+    "label": "Level 5",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 6, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 4, "row": 5, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 0, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "o1", "col": 2, "row": 3, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "g1", "col": 6, "row": 2, "shape": [[0,0],[0,1]], "color": "green", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 1 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 5 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 0 },
+      { "side": "bottom", "color": "green", "size": 1, "exit_col": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 6",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "g1", "col": 5, "row": 1, "shape": [[0,0],[0,1]], "color": "green", "dir": "free" },
+      { "id": "o1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 1 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "green", "size": 1, "exit_col": 0 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 2 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 7",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 5, "row": 0, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 3, "row": 4, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "g1", "col": 5, "row": 6, "shape": [[0,0],[0,1]], "color": "green", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 6 },
+      { "side": "top", "color": "green", "size": 1, "exit_col": 5 },
+      { "side": "right", "color": "yellow", "size": 1, "exit_row": 1 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 4 },
+      { "side": "bottom", "color": "pink", "size": 1, "exit_col": 1 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 8",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 2, "row": 5, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 1, "shape": [[0,0],[0,1],[0,2]], "color": "pink", "dir": "v" },
+      { "id": "b1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "blue", "dir": "free" },
+      { "id": "g1", "col": 3, "row": 0, "shape": [[0,0],[0,1]], "color": "green", "dir": "free" },
+      { "id": "y1", "col": 2, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 4, "row": 7, "shape": [[0,0],[1,0]], "color": "orange", "dir": "h" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 1 },
+      { "side": "top", "color": "blue", "size": 2, "exit_col": 6 },
+      { "side": "bottom", "color": "green", "size": 1, "exit_col": 4 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 7 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 9",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "pk1", "col": 6, "row": 4, "shape": [[0,0],[0,1]], "color": "pink", "dir": "free" },
+      { "id": "g1", "col": 6, "row": 6, "shape": [[0,0],[0,1]], "color": "green", "dir": "v" },
+      { "id": "b1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "blue", "dir": "free" },
+      { "id": "y1", "col": 5, "row": 0, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 7, "row": 0, "shape": [[0,0],[0,1]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 0 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 2 },
+      { "side": "top", "color": "green", "size": 1, "exit_col": 6 },
+      { "side": "left", "color": "blue", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 1 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 6 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 10",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 4, "shape": [[0,0],[0,1]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 4, "row": 0, "shape": [[0,0],[0,1]], "color": "pink", "dir": "free" },
+      { "id": "g1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "green", "dir": "free" },
+      { "id": "b1", "col": 2, "row": 4, "shape": [[0,0],[1,0]], "color": "blue", "dir": "free" },
+      { "id": "y1", "col": 0, "row": 3, "shape": [[0,0],[0,1]], "color": "yellow", "dir": "free" },
+      { "id": "pu2", "col": 3, "row": 3, "shape": [[0,0],[1,0]], "color": "purple", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 0 },
+      { "side": "top", "color": "orange", "size": 1, "exit_col": 0 },
+      { "side": "left", "color": "pink", "size": 2, "exit_row": 4 },
+      { "side": "right", "color": "green", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "blue", "size": 2, "exit_col": 6 },
+      { "side": "bottom", "color": "yellow", "size": 1, "exit_col": 6 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 11",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 5, "row": 5, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 0, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 6, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 0 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 12",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 4, "row": 0, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "g1", "col": 3, "row": 5, "shape": [[0,0],[0,1]], "color": "green", "dir": "free" },
+      { "id": "pk1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "right", "color": "green", "size": 2, "exit_row": 1 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 5, "row": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 13",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 4, "row": 0, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 2, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "y1", "col": 5, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 0, "row": 5, "shape": [[0,0],[0,1],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 5, "row": 3, "shape": [[0,0],[0,1]], "color": "pink", "dir": "v" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 2 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 1 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 14",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "tv1", "col": 5, "row": 1, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "ln1", "col": 0, "row": 5, "shape": [[0,0],[1,0],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "b1", "col": 6, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 0, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "left", "color": "teal", "size": 3, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 6 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 1 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 15",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sh1", "col": 0, "row": 2, "shape": [[1,0],[2,0],[0,1],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "zh1", "col": 4, "row": 5, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 6, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "g1", "col": 5, "row": 7, "shape": [[0,0],[0,1]], "color": "green", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 1 },
+      { "side": "left", "color": "orange", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 6 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "right", "color": "green", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 0 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 16",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 1, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 3, "row": 5, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 6 }
+    ],
+    "walls": [
+      { "col": 4, "row": 3 },
+      { "col": 5, "row": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 17",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 0, "row": 2, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 3, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "left", "color": "teal", "size": 3, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 3 },
+      { "side": "right", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 4, "row": 1 },
+      { "col": 5, "row": 1 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 18",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "h4a", "col": 2, "row": 4, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 1, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 5, "row": 5, "shape": [[0,0],[0,1]], "color": "pink", "dir": "v" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 1, "exit_row": 4 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 6 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 3 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 19",
+    "blocks": [
+      { "id": "r1", "col": 1, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 1, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "zh1", "col": 4, "row": 1, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "teal", "dir": "free" },
+      { "id": "lsw", "col": 0, "row": 2, "shape": [[0,0],[0,1],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 5, "row": 6, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 4, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 6, "row": 5, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 1 },
+      { "side": "bottom", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 5 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 0, "row": 0 },
+      { "col": 7, "row": 0 },
+      { "col": 0, "row": 7 },
+      { "col": 7, "row": 7 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 20",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 2, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 4, "row": 0, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 6, "row": 6, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 0, "row": 4, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "teal", "size": 3, "exit_row": 4 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 6 },
+      { "side": "right", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 3 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 21",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sh1", "col": 0, "row": 3, "shape": [[1,0],[2,0],[0,1],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "zh1", "col": 5, "row": 4, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 3, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 0, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 6, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "left", "color": "orange", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 6 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 2 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 22",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 0, "row": 2, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "h4a", "col": 3, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 4, "row": 0, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 6, "row": 4, "shape": [[0,0],[0,1]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 2, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 1 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 6 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 4 },
+      { "side": "left", "color": "yellow", "size": 2, "exit_row": 1 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 3, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 23",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 0, "row": 6, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 0, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "y1", "col": 5, "row": 1, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 5, "shape": [[0,0],[0,1]], "color": "orange", "dir": "v" },
+      { "id": "pk1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 3 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 6 },
+      { "side": "top", "color": "orange", "size": 1, "exit_col": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 0 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 5, "row": 3 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 7,
+    "label": "Level 24",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 6, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "tv1", "col": 6, "row": 1, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "sh1", "col": 3, "row": 3, "shape": [[1,0],[2,0],[0,1],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 0, "row": 4, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 0, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "left", "color": "teal", "size": 3, "exit_row": 3 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 1 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 6 }
+    ],
+    "walls": [
+      { "col": 4, "row": 2 },
+      { "col": 5, "row": 2 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 25",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "zh1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "teal", "dir": "free" },
+      { "id": "lne1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 3, "row": 0, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "left", "color": "orange", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 3 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 2 },
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 5, "row": 3 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 26",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq3", "col": 4, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "t1", "col": 4, "row": 5, "shape": [[0,0],[1,0],[2,0],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 2, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 7, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 0, "row": 5, "shape": [[0,0],[0,1],[1,1]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "left", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 2 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 0 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 5, "row": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 27",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "h4a", "col": 0, "row": 5, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 3, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "v3a", "col": 6, "row": 0, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "free" },
+      { "id": "pk1", "col": 7, "row": 5, "shape": [[0,0],[0,1]], "color": "pink", "dir": "v" },
+      { "id": "y1", "col": 0, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 2 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 7 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 6 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 2 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 28",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 1, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r4", "col": 5, "row": 6, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 6, "row": 3, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 3, "row": 4, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 0, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 4, "row": 0, "shape": [[0,0],[0,1]], "color": "orange", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "teal", "size": 3, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 3 },
+      { "side": "right", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "orange", "size": 1, "exit_col": 7 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 29",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 0, "row": 3, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "h4a", "col": 4, "row": 1, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "h4b", "col": 2, "row": 7, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 0, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 6, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 0, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 1 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 6 }
+    ],
+    "walls": [
+      { "col": 3, "row": 5 },
+      { "col": 5, "row": 5 },
+      { "col": 4, "row": 6 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 30",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 0, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 5, "row": 0, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "h4a", "col": 0, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "h4b", "col": 4, "row": 3, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 4, "row": 7, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 8, "row": 5, "shape": [[0,0],[0,1]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 2, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" },
+      { "id": "g1", "col": 2, "row": 7, "shape": [[0,0],[1,0]], "color": "green", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 6 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "top", "color": "blue", "size": 1, "exit_col": 4 },
+      { "side": "left", "color": "yellow", "size": 2, "exit_row": 1 },
+      { "side": "right", "color": "pink", "size": 1, "exit_row": 7 },
+      { "side": "top", "color": "green", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 4 },
+      { "col": 5, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 31",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 4, "row": 4, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 4, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 6 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 5 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 5 },
+      { "side": "left", "color": "pink", "size": 1, "exit_row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 32",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 6, "row": 2, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 7, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "left", "color": "orange", "size": 1, "exit_row": 5 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 0 }
+    ],
+    "walls": [
+      { "col": 4, "row": 3 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 33",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 4, "row": 3, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "pl1", "col": 1, "row": 4, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 4, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 4, "row": 7, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 7 },
+      { "side": "left", "color": "teal", "size": 1, "exit_row": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 4 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 3 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 34",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 5, "row": 5, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 4, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 4 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 3 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 3, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 35",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 1, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 4, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 5, "row": 5, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "left", "color": "teal", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 36",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 0, "row": 1, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 5, "shape": [[0,0],[0,1]], "color": "pink", "dir": "v" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 6 },
+      { "side": "top", "color": "pink", "size": 1, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 37",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 6, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 3, "row": 5, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 0, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 4, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 38",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "h4a", "col": 4, "row": 4, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 3, "row": 7, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 6, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 2 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 0 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 2, "row": 4 },
+      { "col": 3, "row": 4 },
+      { "col": 2, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 39",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 1, "row": 3, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 1, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 6, "row": 4, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 6 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 6 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 6 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 5, "row": 3 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 40",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 6, "row": 5, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 7 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 6 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 1 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 4, "row": 3 },
+      { "col": 4, "row": 4 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 41",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 6, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 3, "row": 3, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 4 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 5 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 2, "row": 2 },
+      { "col": 5, "row": 2 },
+      { "col": 2, "row": 5 },
+      { "col": 5, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 42",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 5, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "pl1", "col": 2, "row": 5, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 4, "row": 3, "shape": [[0,0],[0,1]], "color": "orange", "dir": "v" },
+      { "id": "pk1", "col": 6, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 7 },
+      { "side": "left", "color": "teal", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 43",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 5, "row": 3, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 1, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 2 },
+      { "side": "left", "color": "orange", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 },
+      { "col": 3, "row": 5 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 44",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 0, "row": 4, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 4, "row": 2, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 5, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 1, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 7 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 45",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 4, "row": 3, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 2, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 1, "row": 4, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 7, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 5, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 5 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 4, "row": 3 },
+      { "col": 3, "row": 6 },
+      { "col": 4, "row": 6 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 46",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 3, "row": 5, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 4, "row": 1, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 5, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "teal", "size": 1, "exit_col": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 4 },
+      { "side": "left", "color": "orange", "size": 1, "exit_row": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 6 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 47",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "zh1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "teal", "dir": "free" },
+      { "id": "sh1", "col": 4, "row": 4, "shape": [[1,0],[2,0],[0,1],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 2, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 4, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 1 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 6 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 4 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 48",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 4, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 4, "row": 1, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 4, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 1, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 6, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 3, "row": 4 },
+      { "col": 3, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 49",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 5, "row": 2, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 5, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 3, "row": 2, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 4, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 5 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 50",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 7, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 1, "row": 2, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 1, "row": 6, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 1, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "left", "color": "teal", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 5 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 51",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 4, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 4, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 3, "row": 2, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 3, "shape": [[0,0],[0,1]], "color": "orange", "dir": "v" },
+      { "id": "pk1", "col": 0, "row": 5, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 6 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "left", "color": "orange", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 0 }
+    ],
+    "walls": [
+      { "col": 2, "row": 3 },
+      { "col": 2, "row": 4 },
+      { "col": 2, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 52",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 5, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 0, "row": 5, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "h4b", "col": 4, "row": 4, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 4, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 0 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 5 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 2 },
+      { "col": 4, "row": 3 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 53",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 4, "row": 5, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 5, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 1, "row": 5, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 4, "row": 1, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "bottom", "color": "teal", "size": 1, "exit_col": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 5 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 7 },
+      { "side": "top", "color": "pink", "size": 2, "exit_col": 4 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 54",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq3", "col": 7, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 3, "row": 3, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 2, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 1, "row": 3, "shape": [[0,0],[0,1]], "color": "orange", "dir": "v" },
+      { "id": "pk1", "col": 6, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 3 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 3 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 8,
+    "label": "Level 55",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "zh1", "col": 4, "row": 2, "shape": [[0,0],[1,0],[1,1],[2,1]], "color": "teal", "dir": "free" },
+      { "id": "sh1", "col": 4, "row": 5, "shape": [[1,0],[2,0],[0,1],[1,1]], "color": "orange", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 4, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 4, "row": 1, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 3 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 2, "exit_row": 1 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "right", "color": "orange", "size": 2, "exit_row": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 3 },
+      { "col": 3, "row": 4 },
+      { "col": 3, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 56",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 4, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 6, "row": 0, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 1, "row": 5, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 6, "shape": [[0,0],[0,1]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 3, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 7, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "top", "color": "yellow", "size": 2, "exit_col": 3 },
+      { "side": "bottom", "color": "orange", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 3 },
+      { "col": 5, "row": 3 },
+      { "col": 4, "row": 6 },
+      { "col": 5, "row": 6 }
+    ]
+  },
+  {
+    "cols": 8,
+    "rows": 9,
+    "label": "Level 57",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "pl1", "col": 2, "row": 4, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "b1", "col": 7, "row": 3, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 2, "row": 2, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "left", "color": "teal", "size": 1, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 7 },
+      { "side": "right", "color": "yellow", "size": 1, "exit_row": 3 },
+      { "side": "top", "color": "orange", "size": 2, "exit_col": 0 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 58",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 5, "row": 1, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 0, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq3", "col": 6, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "tv1", "col": 6, "row": 3, "shape": [[0,0],[0,1],[0,2],[1,1]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 5, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 2, "row": 3, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 4, "row": 6, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 3, "exit_row": 2 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "left", "color": "yellow", "size": 1, "exit_row": 3 },
+      { "side": "left", "color": "orange", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 3, "row": 4 },
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 3, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 8,
+    "label": "Level 59",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 7, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 5, "row": 5, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "h4a", "col": 0, "row": 5, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "teal", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 3, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 6, "row": 2, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "o1", "col": 5, "row": 3, "shape": [[0,0],[1,0]], "color": "orange", "dir": "free" },
+      { "id": "pk1", "col": 2, "row": 6, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 5 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 1 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 4 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 6 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 3 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 3 },
+      { "col": 4, "row": 4 },
+      { "col": 4, "row": 5 }
+    ]
+  },
+  {
+    "cols": 9,
+    "rows": 9,
+    "label": "Level 60",
+    "blocks": [
+      { "id": "r1", "col": 0, "row": 0, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r2", "col": 0, "row": 8, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "r3", "col": 5, "row": 3, "shape": [[0,0],[1,0],[2,0]], "color": "red", "dir": "free" },
+      { "id": "sq1", "col": 0, "row": 3, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "sq2", "col": 7, "row": 6, "shape": [[0,0],[1,0],[0,1],[1,1]], "color": "purple", "dir": "free" },
+      { "id": "pl1", "col": 2, "row": 5, "shape": [[1,0],[0,1],[1,1],[2,1],[1,2]], "color": "teal", "dir": "free" },
+      { "id": "h4a", "col": 1, "row": 2, "shape": [[0,0],[1,0],[2,0],[3,0]], "color": "orange", "dir": "free" },
+      { "id": "b1", "col": 8, "row": 2, "shape": [[0,0],[0,1],[0,2]], "color": "blue", "dir": "v" },
+      { "id": "y1", "col": 5, "row": 6, "shape": [[0,0],[1,0]], "color": "yellow", "dir": "free" },
+      { "id": "pk1", "col": 1, "row": 7, "shape": [[0,0],[1,0]], "color": "pink", "dir": "free" }
+    ],
+    "gates": [
+      { "side": "right", "color": "red", "size": 2, "exit_row": 4 },
+      { "side": "top", "color": "purple", "size": 2, "exit_col": 2 },
+      { "side": "right", "color": "teal", "size": 1, "exit_row": 6 },
+      { "side": "bottom", "color": "blue", "size": 1, "exit_col": 8 },
+      { "side": "right", "color": "orange", "size": 1, "exit_row": 2 },
+      { "side": "bottom", "color": "yellow", "size": 2, "exit_col": 5 },
+      { "side": "bottom", "color": "pink", "size": 2, "exit_col": 1 }
+    ],
+    "walls": [
+      { "col": 4, "row": 4 },
+      { "col": 5, "row": 4 },
+      { "col": 4, "row": 5 },
+      { "col": 5, "row": 5 }
+    ]
+  }
+]
