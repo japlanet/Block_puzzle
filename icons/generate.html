@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Icon Generator</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; padding: 0 20px; color: #333; }
+  h1 { color: #6a3093; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+  canvas { border: 1px solid #ddd; border-radius: 8px; background: #fafafa; }
+  button { background: linear-gradient(135deg, #ff6b9d, #ff4081); color: white; border: none; padding: 12px 24px; border-radius: 24px; font-size: 16px; cursor: pointer; }
+  button:hover { transform: scale(1.04); }
+  .note { background: #f8f0ff; border-left: 4px solid #a882dd; padding: 12px 16px; border-radius: 8px; font-size: 14px; }
+</style>
+</head>
+<body>
+<h1>🎨 Icon Generator</h1>
+<div class="note">
+  <strong>When to use this:</strong> the PNGs in <code>icons/</code> already exist on macOS (generated via <code>qlmanage</code> during setup).
+  Open this file only if you need to regenerate them (e.g. you changed <code>icon.svg</code> or you're on Windows/Linux).
+  It renders the two source SVGs (<code>icon.svg</code> and <code>icon-maskable.svg</code>) to PNGs at the required sizes and downloads them.
+</div>
+<div class="row">
+  <button onclick="generate()">Generate &amp; download PNGs</button>
+</div>
+<div class="row" id="preview"></div>
+<script>
+const SIZES = [
+  { src: 'icon.svg', name: 'icon-180.png', w: 180 },
+  { src: 'icon.svg', name: 'icon-192.png', w: 192 },
+  { src: 'icon.svg', name: 'icon-512.png', w: 512 },
+  { src: 'icon-maskable.svg', name: 'icon-maskable-512.png', w: 512 },
+];
+
+async function loadSvg(path) {
+  const r = await fetch(path);
+  const text = await r.text();
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(text);
+}
+
+async function render(src, size) {
+  const url = await loadSvg(src);
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.src = url;
+  await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, size, size);
+  return canvas;
+}
+
+async function generate() {
+  const preview = document.getElementById('preview');
+  preview.innerHTML = '';
+  for (const { src, name, w } of SIZES) {
+    const canvas = await render(src, w);
+    preview.appendChild(canvas);
+    canvas.toBlob(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }, 'image/png');
+  }
+}
+</script>
+</body>
+</html>
