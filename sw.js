@@ -1,11 +1,12 @@
 // Service worker: cache-first with versioned cache.
 // Bump CACHE_VERSION whenever you deploy a change to force a refresh.
 
-const CACHE_VERSION = 'animal-escape-v1';
+const CACHE_VERSION = 'animal-escape-v2';
 const ASSETS = [
   './',
   './index.html',
   './css/style.css',
+  './css/editor.css',
   './js/main.js',
   './js/state.js',
   './js/levels.js',
@@ -17,6 +18,13 @@ const ASSETS = [
   './js/input.js',
   './js/effects.js',
   './js/ui.js',
+  './js/editor/main.js',
+  './js/editor/state.js',
+  './js/editor/render.js',
+  './js/editor/tools.js',
+  './js/editor/input.js',
+  './js/editor/export.js',
+  './editor.html',
   './data/levels.json',
   './manifest.webmanifest',
   './icons/icon.svg',

@@ -39,7 +39,26 @@ Any static host will do. Same steps apply:
 
 ## Adding a new level
 
-Levels live in [`data/levels.json`](data/levels.json) as an array of level objects. To add a level, open the file, copy an existing level object, paste it at the end, and tweak. Reload the game to test.
+Two ways. Both end with the level in [`data/levels.json`](data/levels.json).
+
+### Option A — Level editor (recommended)
+
+Open [`editor.html`](editor.html) in your browser (the deployed URL also works: just add `/editor.html` to your GitHub Pages URL). It has:
+
+- Click-to-paint block cells, one color at a time
+- Gate tool with a size selector — click on any edge slot
+- Wall tool for immovable cells
+- Live validation (gate overlaps, orphan colors, off-board gates)
+- "Test solve" — runs the game's own hint engine to confirm the puzzle is solvable
+- "Play this level" — opens the game with your level so you can feel it before committing
+- "Copy level JSON" — one click, paste at the end of `data/levels.json`
+- "Download levels.json" — downloads a full replacement with your new level appended
+
+Your draft autosaves to localStorage as you work.
+
+### Option B — Hand-edit JSON
+
+Open [`data/levels.json`](data/levels.json), copy an existing level object, paste it at the end, tweak. Reload the game to test.
 
 ### Level schema
 
