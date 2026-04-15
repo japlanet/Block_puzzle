@@ -160,6 +160,34 @@ window.addEventListener('resize', () => {
 });
 
 // ── Boot ────────────────────────────────────────────────────────
+const TEST_KEY = 'animal_escape_test_level';
+
+function loadTestLevel() {
+  try {
+    const raw = localStorage.getItem(TEST_KEY);
+    if (!raw) return null;
+    const lv = JSON.parse(raw);
+    // Normalize shape entries so {dc,dr} → [dc,dr] matches our internal format.
+    for (const b of (lv.blocks || [])) {
+      b.shape = b.shape.map(p => Array.isArray(p) ? [p[0], p[1]] : [p.dc, p.dr]);
+      if (!b.dir) b.dir = 'free';
+    }
+    return lv;
+  } catch (e) { return null; }
+}
+
+function installTestPlayUI() {
+  // Replace the hamburger (🗺️) button with a "back to editor" affordance
+  // and hide the win → nxt() flow's wraparound behavior.
+  document.getElementById('mapBtn').textContent = '✎';
+  document.getElementById('mapBtn').title = 'Back to editor';
+  document.getElementById('mapBtn').onclick = () => { window.location.href = 'editor.html'; };
+  const banner = document.createElement('div');
+  banner.style.cssText = 'position:fixed;top:8px;left:50%;transform:translateX(-50%);z-index:500;background:linear-gradient(135deg,#fff,#f8f0ff);border:2px solid var(--accent);border-radius:14px;padding:6px 16px;font-weight:700;color:var(--text);font-size:13px;box-shadow:var(--shadow);';
+  banner.textContent = '🛠️ Test-playing from editor';
+  document.body.appendChild(banner);
+}
+
 async function boot() {
   // Reflect persisted sound preference on the toggle button.
   const soundOn = loadSoundPref();
@@ -168,6 +196,20 @@ async function boot() {
 
   createBubbles();
   wireButtons();
+
+  const params = new URLSearchParams(location.search);
+  const testMode = params.get('test') === '1';
+  if (testMode) {
+    const testLevel = loadTestLevel();
+    if (testLevel) {
+      state.levels = [testLevel];
+      installTestPlayUI();
+      initLevel(0);
+      return;
+    }
+    // Fall through to normal boot if no test level stashed.
+  }
+
   try {
     state.levels = await loadLevels();
   } catch (e) {

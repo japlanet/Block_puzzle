@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1100">
+<title>Animal Escape — Level Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/editor.css">
+</head>
+<body class="editor">
+
+<header id="topBar">
+  <a id="backLink" href="index.html">← Back to game</a>
+  <label class="field">Name
+    <input id="levelLabel" type="text" value="My Level" maxlength="28">
+  </label>
+  <label class="field">Cols
+    <input id="cols" type="number" min="4" max="12" value="8">
+  </label>
+  <label class="field">Rows
+    <input id="rows" type="number" min="4" max="12" value="8">
+  </label>
+  <button id="newLevel" class="primary">+ New level</button>
+  <select id="loadLevel">
+    <option value="">Load existing…</option>
+  </select>
+  <span id="autosaveIndicator" class="muted">Draft saved</span>
+</header>
+
+<div id="workbench">
+
+  <!-- Left: tools -->
+  <aside id="leftPanel">
+    <h3>Blocks</h3>
+    <div id="colorPalette" class="toolGroup"></div>
+    <div id="blockOptions" class="toolOptions" hidden>
+      <label>Direction
+        <select id="blockDir">
+          <option value="free">Free (any)</option>
+          <option value="h">Horizontal only</option>
+          <option value="v">Vertical only</option>
+        </select>
+      </label>
+      <p class="hint">Click cells to build the block. Same-color cells merge. Click an existing cell to remove it.</p>
+      <button id="finishBlock" class="primary">✓ Finish block</button>
+      <button id="cancelBlock">Cancel</button>
+    </div>
+
+    <h3>Other</h3>
+    <button class="tool" data-tool="gate">🚪 Gate</button>
+    <div id="gateOptions" class="toolOptions" hidden>
+      <label>Color
+        <select id="gateColor"></select>
+      </label>
+      <label>Size
+        <select id="gateSize">
+          <option value="1">1 cell</option>
+          <option value="2">2 cells</option>
+          <option value="3">3 cells</option>
+        </select>
+      </label>
+      <p class="hint">Click on an outside-edge slot to place.</p>
+    </div>
+
+    <button class="tool" data-tool="wall">🧱 Wall</button>
+    <button class="tool" data-tool="eraser">✕ Eraser</button>
+
+    <h3>History</h3>
+    <div class="row">
+      <button id="undoBtn" title="Cmd/Ctrl + Z">↶ Undo</button>
+      <button id="redoBtn" title="Cmd/Ctrl + Shift + Z">↷ Redo</button>
+    </div>
+  </aside>
+
+  <!-- Center: board -->
+  <main id="editorStage">
+    <div id="editorWrap">
+      <div id="editorBoard"></div>
+    </div>
+    <p class="legend muted">Grid-edge slots place gates · interior cells place blocks/walls · active tool is highlighted</p>
+  </main>
+
+  <!-- Right: validation / actions -->
+  <aside id="rightPanel">
+    <h3>Validation</h3>
+    <div id="validation" class="panel">Loading…</div>
+
+    <h3>Solvability</h3>
+    <div class="row">
+      <button id="checkSolvable">▶ Test solve</button>
+      <button id="testPlay">🎮 Play this level</button>
+    </div>
+    <div id="solveResult" class="panel muted">Not yet tested.</div>
+
+    <h3>Export</h3>
+    <button id="copyJson" class="primary full">📋 Copy level JSON</button>
+    <button id="downloadAll" class="full">💾 Download levels.json (+ this)</button>
+    <p class="hint">Paste the copied JSON at the end of the <code>[ … ]</code> in <code>data/levels.json</code>, or use the download to replace your file.</p>
+  </aside>
+
+</div>
+
+<!-- Toast notifications -->
+<div id="editorToast"></div>
+
+<script type="module" src="js/editor/main.js"></script>
+</body>
+</html>
