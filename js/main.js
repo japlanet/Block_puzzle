@@ -1,6 +1,6 @@
 // Entry point. Wires modules together and runs the game loop.
 
-import { state, getSavedLevelIdx, recordLevelComplete, loadSoundPref, saveSoundPref } from './state.js';
+import { state, getSavedLevelIdx, recordLevelComplete, clearProgress, loadSoundPref, saveSoundPref } from './state.js';
 import { loadLevels, cloneBlocks } from './levels.js';
 import { atGate } from './geometry.js';
 import { renderBoard, animateExit, clearBlocks, ANIMALS } from './render.js';
@@ -14,6 +14,9 @@ import {
   maybeShowTutorial, closeTutorial,
   openLevelSelect, closeLevelSelect, showWinOverlay, hideWinOverlay,
 } from './ui.js';
+
+const DEBUG = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ||
+  new URLSearchParams(location.search).get('debug') === '1';
 
 // ── Game flow ───────────────────────────────────────────────────
 function initLevel(idx) {
@@ -30,11 +33,18 @@ function initLevel(idx) {
   for (const b of state.blocks) wireBlock(b);
   updateMoveCount();
   // Solver sanity-check (dev aid — prints to console only on unsolvable levels).
-  try {
-    const r = solve(state.level, state.blocks);
-    if (!r) console.warn(`[solver] Level ${idx + 1} exceeded node budget; hint may fall back to greedy.`);
-  } catch (e) {
-    console.warn('[solver] error on level', idx + 1, e);
+  // Only runs on localhost or with ?debug=1: on a few levels the search takes
+  // seconds, and players shouldn't pay for it at every level load.
+  if (DEBUG) {
+    try {
+      const t0 = performance.now();
+      const r = solve(state.level, state.blocks);
+      const ms = Math.round(performance.now() - t0);
+      if (!r) console.warn(`[solver] Level ${idx + 1} exceeded node budget; hint may fall back to greedy.`);
+      else console.info(`[solver] Level ${idx + 1}: ${r.moves.length} hint moves (${ms} ms)`);
+    } catch (e) {
+      console.warn('[solver] error on level', idx + 1, e);
+    }
   }
 }
 
@@ -137,6 +147,14 @@ function wireButtons() {
     resetLevel();
   });
   document.getElementById('lsx').addEventListener('click', () => closeLevelSelect());
+  document.getElementById('resetAllBtn').addEventListener('click', () => {
+    playSfx('tap');
+    if (!confirm('Reset all progress? Every level will be locked again and all stars cleared.')) return;
+    clearProgress();
+    closeLevelSelect();
+    initLevel(0);
+    showToast('Progress reset 🔄');
+  });
   document.getElementById('ls').addEventListener('click', e => {
     if (e.target.id === 'ls') closeLevelSelect();
   });
@@ -222,9 +240,32 @@ async function boot() {
   maybeShowTutorial();
 
   // Register service worker for offline + installable PWA.
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(err => console.warn('SW register failed:', err));
-  }
+  registerServiceWorker();
+}
+
+// ── Offline / updates ───────────────────────────────────────────
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+
+  // When a new version of sw.js takes over (CACHE_VERSION bumped), reload once
+  // so the freshly cached files are the ones running. Skipped on the very
+  // first install, where there was no previous controller.
+  let hadController = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!hadController) { hadController = true; return; }
+    showToast('Updated! ✨');
+    setTimeout(() => window.location.reload(), 600);
+  });
+
+  navigator.serviceWorker.register('sw.js')
+    .then(reg => {
+      // Check for a newer sw.js each time the app comes back to the foreground
+      // (installed PWAs can stay open for days).
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') reg.update().catch(() => {});
+      });
+    })
+    .catch(err => console.warn('SW register failed:', err));
 }
 
 boot();

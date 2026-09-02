@@ -1,13 +1,13 @@
 # Animal Escape! 🦊
 
-A cute sliding-block puzzle where you guide animals to their matching colored doors. Works in any modern browser; installs on iPad/iPhone as a full-screen offline app — no App Store, no developer account.
+A cute sliding-block puzzle where you guide animals to their matching colored doors. Works in any modern browser; installs on iPad/iPhone as a full-screen app and is fully playable offline — no App Store, no developer account.
 
 ## Play locally
 
 Modern browsers block ES modules when opened via `file://`, so you need to run a tiny server:
 
 ```sh
-cd ~/Desktop/Game
+cd ~/Desktop/Block_puzzle
 python3 -m http.server 8080
 ```
 
@@ -27,7 +27,16 @@ Open <http://localhost:8080> and play.
 3. Wait ~60 s. Your URL will be `https://<your-user>.github.io/<repo-name>/`.
 4. Open that URL on the iPad and follow "Install on iPad" above.
 
-**To update:** push a commit. After Pages redeploys (~30 s), the next launch of the app on the iPad fetches the new version in the background and serves it on the launch after that. For an immediate refresh, delete the app from the home screen and re-add it.
+**To update:** bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) and push. After Pages redeploys (~30 s), the next launch of the app (or the next time it's brought to the foreground) downloads the new version, shows an "Updated!" toast, and reloads itself.
+
+## Playing offline
+
+Everything the game needs — pages, scripts, levels, icons, and the Fredoka font — is bundled in this repo and precached by the service worker ([`sw.js`](sw.js)) the first time you open the game over HTTPS or `localhost`. After that first load it runs with no network at all: the installed iPad app, a browser tab, or airplane mode all work.
+
+- **Requirements:** one online visit per device, and a service-worker-capable origin (HTTPS or localhost — not `file://`).
+- **Progress and stars** are stored in `localStorage`, so they persist offline too.
+- **To verify:** load the game once, turn on airplane mode (or in DevTools → Application → Service Workers tick "Offline"), and reload. It should come up identically, Fredoka font included.
+- **Storage footprint:** about 1 MB, almost all of it the icon PNGs.
 
 ### Alternatives to GitHub Pages
 
@@ -114,6 +123,15 @@ Open your browser's DevTools console before you play — the built-in solver run
 
 If you see that message, simplify the level until it solves.
 
+For a definitive check, run the audit script — it validates every level's data and runs an exhaustive search that proves each one is solvable (blocks can stop on any cell, exactly like a player's drag):
+
+```sh
+python3 tools/audit.py                 # all levels; exit code 1 if any is broken
+python3 tools/audit.py --show 22,23    # also print an ASCII map of those levels
+```
+
+A level reported as `stuck` has a block that can't reach its gate even on an empty board (walled in, or a locked-direction block that isn't lined up with its gate). `tools/designs.py` holds the hand-drawn ASCII sources for the shaped levels (31, 44, 47, 49, 57, 60) and can regenerate them.
+
 ### Shape cookbook
 
 Some common shapes, for reference:
@@ -135,10 +153,14 @@ Some common shapes, for reference:
 Game/
 ├── index.html                 # thin shell (UI chrome + script imports)
 ├── manifest.webmanifest       # PWA manifest
-├── sw.js                      # service worker (cache-first, offline)
+├── sw.js                      # service worker (precache + cache-first, offline)
 ├── README.md
 ├── css/
-│   └── style.css              # all styles
+│   ├── style.css              # all styles (+ self-hosted Fredoka @font-face)
+│   └── editor.css             # level editor styles
+├── fonts/
+│   ├── fredoka-latin.woff2    # Fredoka variable font (SIL OFL), latin subset
+│   └── fredoka-latin-ext.woff2
 ├── js/
 │   ├── main.js                # entry point
 │   ├── state.js               # game state + localStorage progress
@@ -153,6 +175,10 @@ Game/
 │   └── ui.js                  # tutorial, level select, win overlay, toasts
 ├── data/
 │   └── levels.json            # 60 pretty-printed levels, ~1700 lines
+├── tools/
+│   ├── audit.py               # solvability audit for every level
+│   ├── designs.py             # ASCII sources for the shaped levels
+│   └── levelfmt.py            # writes levels.json in its compact style
 └── icons/
     ├── icon.svg               # main source art
     ├── icon-maskable.svg      # Android maskable variant
@@ -166,10 +192,11 @@ Game/
 ## Troubleshooting
 
 - **Icons look wrong on the home screen**: delete the app from the home screen and re-add it. iOS caches the first icon it sees aggressively.
-- **Changes don't appear after deploy**: bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v1` → `v2`) before pushing. The service worker will invalidate the old cache on next load.
+- **Changes don't appear after deploy**: bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) before pushing. The service worker will invalidate the old cache and reload the game on next load.
+- **Game won't open offline**: it needs one online visit first so the service worker can cache everything. Also make sure you're on HTTPS or localhost — service workers don't run from `file://`.
 - **Audio won't play on iPad**: iOS requires a user gesture before audio can start. Tap anything once (the sound button is a good target) and the engine unlocks.
 - **`fetch` errors loading levels**: make sure you're running a server (not opening `index.html` via `file://`). See "Play locally" above.
 
 ## Credits
 
-Built as a family puzzle project. Emoji art, Fredoka font from Google Fonts, audio generated live via the Web Audio API.
+Built as a family puzzle project. Emoji art, [Fredoka](https://fonts.google.com/specimen/Fredoka) font (SIL Open Font License, bundled in `fonts/`), audio generated live via the Web Audio API.

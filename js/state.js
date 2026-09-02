@@ -39,6 +39,11 @@ export function recordLevelComplete(levelIdx, stars) {
   saveProgress(p);
 }
 
+/** Wipe saved progress and stars (used by the "Reset all progress" button). */
+export function clearProgress() {
+  try { localStorage.removeItem(SAVE_KEY); } catch (e) {}
+}
+
 export function getSavedLevelIdx() {
   return Math.min(loadProgress().best, state.levels.length - 1);
 }
