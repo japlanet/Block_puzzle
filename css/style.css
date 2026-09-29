@@ -146,7 +146,7 @@ body {
   filter: brightness(1.1) drop-shadow(0 6px 14px rgba(100, 50, 150, 0.35));
 }
 /* Bumped into something while dragging: wiggle the art (the block itself carries the drag transform). */
-.bg.bump > svg, .bg.bump > .da { animation: bumpWobble 0.24s ease-in-out; }
+.bg.bump > svg, .bg.bump > .da, .bg.bump > .face { animation: bumpWobble 0.24s ease-in-out; }
 @keyframes bumpWobble {
   0%, 100% { transform: rotate(0deg); }
   25%      { transform: rotate(-4deg); }
@@ -156,7 +156,8 @@ body {
   z-index: 40;
   pointer-events: none;
   animation: none;
-  transition: transform 0.42s cubic-bezier(0.4, 0.0, 0.6, 1), opacity 0.42s ease, filter 0.42s ease;
+  /* ease-in on opacity keeps the happy face visible for most of the exit */
+  transition: transform 0.42s cubic-bezier(0.4, 0.0, 0.6, 1), opacity 0.42s ease-in, filter 0.42s ease-in;
 }
 
 @keyframes idleBob {
@@ -169,7 +170,25 @@ body {
 }
 
 .da { position: absolute; pointer-events: none; z-index: 11; }
-.da svg { width: 100%; height: 100%; }
+.da svg { width: 100%; height: 100%; display: block; }
+
+/* ── Animal heads (drawn by js/critters.js) ─────────────────── */
+.face { position: absolute; pointer-events: none; z-index: 12; }
+.face .critter { display: block; width: 100%; height: 100%; overflow: visible; }
+.critter { overflow: visible; }
+/* Blink: the lid (same colour as the face) drops over the eye for a moment.
+   Each head gets its own --blink delay so the board doesn't blink in unison. */
+.critter .lid {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+  animation: critterBlink 4.6s ease-in-out infinite;
+  animation-delay: var(--blink, 0s);
+}
+@keyframes critterBlink {
+  0%, 93%, 100% { transform: scaleY(0); }
+  95.5%, 97.5%  { transform: scaleY(1); }
+}
 
 /* ── Gates ──────────────────────────────────────────────────── */
 .gate {
@@ -529,6 +548,9 @@ body {
   color: var(--text);
 }
 .tutStep .emoji { font-size: 28px; }
+#tutBox h2 .critter { width: 40px; height: 40px; vertical-align: -10px; margin-right: 2px; }
+.tutCritters { display: flex; justify-content: center; flex-wrap: wrap; gap: 2px; margin: 4px 0 10px; }
+.tutCritters .critter { width: 32px; height: 32px; }
 #tutBtn {
   background: linear-gradient(135deg, var(--accent3), #4caf50);
   color: white;
@@ -547,7 +569,7 @@ body {
 
 /* Accessibility: respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble, .bg.bump > svg, .bg.bump > .da {
+  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble, .bg.bump > svg, .bg.bump > .da, .bg.bump > .face, .critter .lid {
     animation: none !important;
   }
 }

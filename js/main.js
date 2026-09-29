@@ -3,7 +3,8 @@
 import { state, getSavedLevelIdx, recordLevelComplete, clearProgress, loadSoundPref, saveSoundPref } from './state.js';
 import { loadLevels, cloneBlocks } from './levels.js';
 import { atGate } from './geometry.js';
-import { renderBoard, animateExit, clearBlocks, ANIMALS } from './render.js';
+import { renderBoard, animateExit, clearBlocks } from './render.js';
+import { critterSVG } from './critters.js';
 import { wireBlock, setOnRelease, refreshBlockClasses } from './input.js';
 import { initAudio, toggleSound, isSoundOn, playSfx, resumeIfSuspended } from './audio.js';
 import { solve } from './solver.js';
@@ -259,6 +260,10 @@ async function boot() {
 
   createBubbles();
   wireButtons();
+  // Drawn animal heads in the tutorial (placeholders marked data-critter="<color>").
+  document.querySelectorAll('[data-critter]').forEach((el, i) => {
+    el.outerHTML = critterSVG(el.dataset.critter, { blinkDelay: (i * 0.7) % 4.6 });
+  });
 
   const params = new URLSearchParams(location.search);
   const testMode = params.get('test') === '1';

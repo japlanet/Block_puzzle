@@ -102,18 +102,18 @@ Open [`data/levels.json`](data/levels.json), copy an existing level object, past
 
 ### Colors and animals
 
-Every color has a themed animal and per-color exit jingle baked in:
+Every color has a themed animal and per-color exit jingle baked in. The animals are drawn as SVG heads by `js/critters.js` (same style as the Ice Cream Shop critters: round head, shiny eyes, rosy cheeks), not emoji, so they look the same on every iPad and scale up to fill big pieces. The same head sits on the matching door. Heads blink now and then (each at its own moment) and switch to a happy ^ ^ face with a big smile as they leave through their door.
 
-| color | animal | door emoji |
-|-------|--------|------------|
-| red | 🦊 fox | 🦊 |
-| blue | 🐳 whale | 🐳 |
-| green | 🐸 frog | 🐸 |
-| yellow | 🐤 chick | 🐤 |
-| purple | 🦄 unicorn | 🦄 |
-| orange | 🦁 lion | 🦁 |
-| pink | 🐷 pig | 🐷 |
-| teal | 🐢 turtle | 🐢 |
+| color | animal | drawing |
+|-------|--------|---------|
+| red | fox | orange face, pointy ears, white lower face |
+| blue | whale | periwinkle face, water spout, pale chin band |
+| green | frog | eyes on top bumps, wide smile |
+| yellow | chick | feather tuft, orange beak |
+| purple | unicorn | white face, gold horn, purple/pink forelock |
+| orange | lion | spiky two-tone mane, round ears |
+| pink | pig | pointy ears, big snout |
+| teal | turtle | small green head peeking out of a hex-patterned shell |
 
 ### Testing a new level
 
@@ -170,6 +170,7 @@ Game/
 │   ├── hint.js                # finger animation driven by solver
 │   ├── audio.js               # synth music + SFX
 │   ├── render.js              # board/block/gate rendering
+│   ├── critters.js            # SVG animal heads (moods, blinking)
 │   ├── input.js               # pointer drag with smooth sub-cell motion
 │   ├── effects.js             # bubbles, fireworks, exit particles
 │   └── ui.js                  # tutorial, level select, win overlay, toasts

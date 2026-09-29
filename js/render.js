@@ -1,9 +1,11 @@
 // Board rendering: grid cells, walls, gates, blocks.
-// Blocks are created once per level (SVG + emoji are static). Subsequent updates
-// just reposition via CSS transform, enabling smooth sub-cell drag.
+// Blocks are created once per level (SVG + drawn animal head are static).
+// Subsequent updates just reposition via CSS transform, enabling smooth
+// sub-cell drag.
 
 import { state } from './state.js';
 import { cellsOf, bbox } from './geometry.js';
+import { critterSVG } from './critters.js';
 
 export const COLORS = {
   red:    { bg: '#ff6b6b', brd: '#e55050', arr: 'rgba(255,255,255,0.5)', light: '#ffe0e0' },
@@ -16,6 +18,8 @@ export const COLORS = {
   teal:   { bg: '#48dbfb', brd: '#30c0e0', arr: 'rgba(255,255,255,0.5)', light: '#d8f8ff' },
 };
 
+// Emoji stand-ins, kept for the level editor's palette. The game itself draws
+// the animals with critterSVG() from critters.js.
 export const ANIMALS = {
   red: '🦊', blue: '🐳', green: '🐸', yellow: '🐤',
   purple: '🦄', orange: '🦁', pink: '🐷', teal: '🐢',
@@ -91,7 +95,6 @@ function placeGate(g, wrap, board) {
   const by = br.top - wr.top;
   const gw = cs * 0.4;
   const sz = g.size;
-  const emoji = ANIMALS[g.color] || '⭐';
 
   const base = `border-radius:14px;`;
   if (g.side === 'right') {
@@ -104,7 +107,8 @@ function placeGate(g, wrap, board) {
     el.style.cssText += `;${base}height:${gw}px;width:${cs * sz}px;top:${by - gw}px;left:${bx + g.exit_col * cs}px;border-radius:14px 14px 0 0;border-bottom:none;`;
   }
   el.style.background = `linear-gradient(135deg, ${col.bg}, ${col.brd})`;
-  el.textContent = emoji;
+  // The animal who lives behind this door (no blinking: keeps doors calm and cheap).
+  el.innerHTML = critterSVG(g.color, { blink: false, size: Math.round(gw * 0.95) });
   el.dataset.color = g.color;
   el.dataset.side = g.side;
   wrap.appendChild(el);
@@ -157,9 +161,6 @@ function drawBlockInterior(g, b) {
            + `L ${x + blR} ${y + h} Q ${x} ${y + h} ${x} ${y + h - blR} `
            + `L ${x} ${y + tlR} Q ${x} ${y} ${x + tlR} ${y} Z `;
   }
-
-  const animal = ANIMALS[b.color] || '⭐';
-  const eFontSize = Math.max(16, Math.min(cs * 0.55, W < cs * 1.5 ? cs * 0.5 : cs * 0.58));
 
   const svg = document.createElementNS(SVG_NS, 'svg');
   svg.setAttribute('width', W);
@@ -216,29 +217,94 @@ function drawBlockInterior(g, b) {
   brdPath.setAttribute('stroke-linejoin', 'round');
   svg.appendChild(brdPath);
 
-  // Animal emoji, centered via foreignObject so it scales with the block.
-  const fo = document.createElementNS(SVG_NS, 'foreignObject');
-  fo.setAttribute('x', '0'); fo.setAttribute('y', '0');
-  fo.setAttribute('width', W); fo.setAttribute('height', H);
-  fo.style.cssText = 'pointer-events:none;';
-  const fd = document.createElement('div');
-  fd.style.cssText = `width:${W}px;height:${H}px;display:flex;align-items:center;justify-content:center;font-size:${eFontSize}px;line-height:1;pointer-events:none;`;
-  fd.textContent = animal;
-  fo.appendChild(fd);
-  svg.appendChild(fo);
   g.appendChild(svg);
 
-  // Direction arrow overlay for constrained blocks.
-  if (b.dir === 'h' || b.dir === 'v') {
+  // The animal's head, centred on the biggest solid part of the piece.
+  const spot = faceSpot(cells, bb);
+  let fx = spot.x * cs, fy = spot.y * cs;
+  const shortSide = Math.min(spot.w, spot.h) * cs;
+  let size = shortSide * 0.94;
+  const constrained = b.dir === 'h' || b.dir === 'v';
+  const ad = cs * 0.22;      // arrowhead depth
+  const am = cs * 0.06;      // arrowhead gap from the block edge
+  // Arrow runs along x (dir h) or y (dir v) through the head's centre, between
+  // the ends of the head's rectangle.
+  const rx0 = (spot.x - spot.w / 2) * cs, rx1 = (spot.x + spot.w / 2) * cs;
+  const ry0 = (spot.y - spot.h / 2) * cs, ry1 = (spot.y + spot.h / 2) * cs;
+  let ax = fx, ay = fy, shaft = false;
+  if (constrained) {
+    const alongCells = b.dir === 'h' ? spot.w : spot.h;
+    const crossCells = b.dir === 'h' ? spot.h : spot.w;
+    if (alongCells < 2 && crossCells >= 2) {
+      // Moves across its short side (e.g. a tall piece that slides sideways):
+      // head in the first cell, a full double arrow in the last one.
+      size = cs * 0.86;
+      if (b.dir === 'h') { fy = ry0 + cs / 2; ay = ry1 - cs / 2; }
+      else               { fx = rx0 + cs / 2; ax = rx1 - cs / 2; }
+      shaft = true;
+    } else {
+      // Leave room at both ends for the arrowheads.
+      size = Math.max(shortSide * 0.5, Math.min(size, alongCells * cs - 2 * (ad + am)));
+    }
+  }
+  const face = document.createElement('div');
+  face.className = 'face';
+  face.style.cssText = `left:${fx - size / 2}px;top:${fy - size / 2}px;width:${size}px;height:${size}px;`;
+  face.dataset.color = b.color;
+  face.innerHTML = critterSVG(b.color, { blinkDelay: Math.random() * 4.6 });
+  g.appendChild(face);
+
+  // Direction arrowheads for constrained blocks, at both ends of the piece.
+  if (constrained) {
     const a = document.createElement('div');
     a.className = 'da';
     a.style.cssText = 'left:0;top:0;width:100%;height:100%;';
-    const ac = col.arr;
-    a.innerHTML = b.dir === 'h'
-      ? `<svg viewBox="0 0 100 100" xmlns="${SVG_NS}" preserveAspectRatio="none"><polygon points="10,50 30,18 30,38 70,38 70,18 90,50 70,82 70,62 30,62 30,82" fill="${ac}" opacity="0.6"/></svg>`
-      : `<svg viewBox="0 0 100 100" xmlns="${SVG_NS}" preserveAspectRatio="none"><polygon points="50,10 82,30 62,30 62,70 82,70 50,90 18,70 38,70 38,30 18,30" fill="${ac}" opacity="0.6"/></svg>`;
+    const ac = b.color === 'yellow' ? 'rgba(120,90,0,0.45)' : 'rgba(255,255,255,0.85)';
+    const hw = ad * 0.95;    // half the arrowhead's width
+    const sw = Math.max(2, cs * 0.06);
+    let d = b.dir === 'h'
+      ? `M${rx0 + am + ad} ${ay - hw} L${rx0 + am} ${ay} L${rx0 + am + ad} ${ay + hw} Z M${rx1 - am - ad} ${ay - hw} L${rx1 - am} ${ay} L${rx1 - am - ad} ${ay + hw} Z`
+      : `M${ax - hw} ${ry0 + am + ad} L${ax} ${ry0 + am} L${ax + hw} ${ry0 + am + ad} Z M${ax - hw} ${ry1 - am - ad} L${ax} ${ry1 - am} L${ax + hw} ${ry1 - am - ad} Z`;
+    let extra = '';
+    if (shaft) {
+      const sd = b.dir === 'h'
+        ? `M${rx0 + am + ad} ${ay} L${rx1 - am - ad} ${ay}`
+        : `M${ax} ${ry0 + am + ad} L${ax} ${ry1 - am - ad}`;
+      extra = `<path d="${sd}" stroke="${ac}" stroke-width="${cs * 0.14}"/>`;
+    }
+    a.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="${SVG_NS}"><path d="${d}" fill="${ac}" stroke="${ac}" stroke-width="${sw}" stroke-linejoin="round"/>${extra}</svg>`;
     g.appendChild(a);
   }
+}
+
+/**
+ * Where the head goes: the centre (in cells, relative to the bounding box) of
+ * the filled rectangle with the longest short side, then the biggest area,
+ * then closest to the piece's middle. For an L or T that is one arm, never an
+ * empty corner of the bounding box.
+ */
+function faceSpot(cells, bb) {
+  const w = bb.w, h = bb.h;
+  const filled = new Set(cells.map(({ c, r }) => `${c - bb.minC},${r - bb.minR}`));
+  let mx = 0, my = 0;
+  for (const { c, r } of cells) { mx += c - bb.minC + 0.5; my += r - bb.minR + 0.5; }
+  mx /= cells.length; my /= cells.length;
+  let best = null;
+  for (let x0 = 0; x0 < w; x0++) for (let y0 = 0; y0 < h; y0++) {
+    for (let x1 = x0; x1 < w; x1++) for (let y1 = y0; y1 < h; y1++) {
+      let ok = true;
+      for (let x = x0; x <= x1 && ok; x++) for (let y = y0; y <= y1; y++) {
+        if (!filled.has(`${x},${y}`)) { ok = false; break; }
+      }
+      if (!ok) continue;
+      const rw = x1 - x0 + 1, rh = y1 - y0 + 1;
+      const cx = x0 + rw / 2, cy = y0 + rh / 2;
+      const cand = { x: cx, y: cy, w: rw, h: rh, s: Math.min(rw, rh), a: rw * rh, d: Math.hypot(cx - mx, cy - my) };
+      if (!best || cand.s > best.s || (cand.s === best.s && (cand.a > best.a ||
+          (cand.a === best.a && cand.d < best.d - 1e-9)))) best = cand;
+    }
+  }
+  return best || { x: w / 2, y: h / 2, w: 1, h: 1 };
 }
 
 /**
@@ -281,6 +347,9 @@ export function animateExit(b, gate) {
     if (gate.side === 'bottom') dy = cs * 1.2;
     if (gate.side === 'top')    dy = -cs * 1.2;
 
+    // Home at last: swap to the happy face (^ ^ and a big smile) for the exit.
+    const face = el.querySelector('.face');
+    if (face) face.innerHTML = critterSVG(b.color, { mood: 'happy' });
     el.classList.add('exiting');
     el.style.transform = `translate(${dx}px, ${dy}px) scale(0.4)`;
     el.style.opacity = '0';
