@@ -105,6 +105,8 @@ body {
   max-width: 520px;
   z-index: 10;
 }
+/* The board is a drag surface: stop iOS treating a drag as a pan/zoom and cancelling it. */
+#bw, #bw * { touch-action: none; }
 #bw { position: relative; overflow: visible; filter: drop-shadow(0 6px 24px rgba(100, 50, 150, 0.2)); }
 #board {
   display: grid;
@@ -142,6 +144,13 @@ body {
   cursor: grabbing;
   animation: none;
   filter: brightness(1.1) drop-shadow(0 6px 14px rgba(100, 50, 150, 0.35));
+}
+/* Bumped into something while dragging: wiggle the art (the block itself carries the drag transform). */
+.bg.bump > svg, .bg.bump > .da { animation: bumpWobble 0.24s ease-in-out; }
+@keyframes bumpWobble {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-4deg); }
+  75%      { transform: rotate(4deg); }
 }
 .bg.exiting {
   z-index: 40;
@@ -422,6 +431,20 @@ body {
   font-family: inherit;
   transition: transform 0.12s, color 0.12s, border-color 0.12s;
 }
+/* Press-and-hold to reset: a fill sweeps across while held (see main.js). */
+#resetAllBtn { position: relative; overflow: hidden; isolation: isolate; touch-action: none; -webkit-touch-callout: none; }
+#resetAllBtn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--accent);
+  opacity: 0.3;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.2s ease-out;
+}
+#resetAllBtn.holding::before { transform: scaleX(1); transition: transform 2s linear; }
 #resetAllBtn:hover { color: var(--accent); border-color: var(--accent); }
 #resetAllBtn:active { transform: scale(0.95); }
 .lv {
@@ -524,7 +547,7 @@ body {
 
 /* Accessibility: respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble {
+  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble, .bg.bump > svg, .bg.bump > .da {
     animation: none !important;
   }
 }

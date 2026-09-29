@@ -64,5 +64,5 @@ export function showHint() {
     reps++;
     hintTimer = reps < 3 ? setTimeout(stepForward, 200) : setTimeout(stopHint, 200);
   }
-  setTimeout(stepForward, 60);
+  hintTimer = setTimeout(stepForward, 60);
 }

@@ -18,8 +18,14 @@ import {
 const DEBUG = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ||
   new URLSearchParams(location.search).get('debug') === '1';
 
+// Bumped on every level (re)start so delayed win celebrations queued for an
+// earlier level know to stand down.
+let levelGen = 0;
+
 // ── Game flow ───────────────────────────────────────────────────
 function initLevel(idx) {
+  levelGen++;
+  hideWinOverlay();
   state.levelIndex = idx;
   state.level = state.levels[idx] || state.levels[0];
   if (!state.level) throw new Error('No levels loaded');
@@ -88,9 +94,16 @@ function checkGatesAndWin(releasedBlock) {
     if (state.selectedId === block.id) state.selectedId = null;
   }
 
-  // Win check once animations finish.
+  if (state.blocks.length > 0) return;
+
+  // Level solved: save the stars right away (so leaving mid-celebration can't
+  // lose the win), then celebrate once the exit animations finish — unless
+  // the player has moved on to another level (or restarted) by then.
+  const gen = levelGen;
+  const stars = computeStars();
+  recordLevelComplete(state.levelIndex, stars);
   setTimeout(() => {
-    if (state.blocks.length === 0) showWin();
+    if (gen === levelGen) showWin(stars, gen);
   }, 460);
 }
 
@@ -106,12 +119,12 @@ function computeStars() {
   return 1;
 }
 
-function showWin() {
+function showWin(stars, gen) {
   playSfx('win');
   launchFireworks();
-  const stars = computeStars();
-  recordLevelComplete(state.levelIndex, stars);
-  setTimeout(() => showWinOverlay(stars), 900);
+  setTimeout(() => {
+    if (gen === levelGen) showWinOverlay(stars);
+  }, 900);
 }
 
 // ── Release handler passed to input.js ──────────────────────────
@@ -147,14 +160,7 @@ function wireButtons() {
     resetLevel();
   });
   document.getElementById('lsx').addEventListener('click', () => closeLevelSelect());
-  document.getElementById('resetAllBtn').addEventListener('click', () => {
-    playSfx('tap');
-    if (!confirm('Reset all progress? Every level will be locked again and all stars cleared.')) return;
-    clearProgress();
-    closeLevelSelect();
-    initLevel(0);
-    showToast('Progress reset 🔄');
-  });
+  wireHoldToReset();
   document.getElementById('ls').addEventListener('click', e => {
     if (e.target.id === 'ls') closeLevelSelect();
   });
@@ -163,6 +169,45 @@ function wireButtons() {
     closeTutorial();
     if (!state._audioInited) { initAudio(); state._audioInited = true; }
   });
+}
+
+// "Clear all stars" needs a 2-second press-and-hold (with a filling bar), so a
+// stray tap from a little one can't wipe everything.
+const RESET_HOLD_MS = 2000;
+
+function wireHoldToReset() {
+  const btn = document.getElementById('resetAllBtn');
+  let holdTimer = null;
+  let holdPointer = null;
+
+  const cancel = e => {
+    if (holdPointer === null || (e && e.pointerId !== holdPointer)) return;
+    clearTimeout(holdTimer);
+    holdTimer = null;
+    holdPointer = null;
+    btn.classList.remove('holding');
+  };
+
+  btn.addEventListener('pointerdown', e => {
+    if (holdPointer !== null) return;
+    e.preventDefault();
+    playSfx('tap');
+    holdPointer = e.pointerId;
+    btn.classList.add('holding');
+    holdTimer = setTimeout(() => {
+      holdTimer = null;
+      holdPointer = null;
+      btn.classList.remove('holding');
+      clearProgress();
+      closeLevelSelect();
+      initLevel(0);
+      showToast('All stars cleared 🔄');
+    }, RESET_HOLD_MS);
+  });
+  btn.addEventListener('pointerup', cancel);
+  btn.addEventListener('pointerleave', cancel);
+  btn.addEventListener('pointercancel', cancel);
+  btn.addEventListener('contextmenu', e => e.preventDefault());
 }
 
 // ── Resize ──────────────────────────────────────────────────────

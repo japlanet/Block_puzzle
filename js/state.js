@@ -8,7 +8,7 @@ export const state = {
   blocks: [],       // Live blocks on the board (mutated during play)
   cellSize: 70,     // Pixel size of one grid cell (recomputed on resize)
   selectedId: null, // ID of currently-selected block, or null
-  dragInfo: null,   // { id, px, py, sc, sr, offX, offY } during pointer drag
+  dragInfo: null,   // { id, pointerId, px, py, sc, sr, subX, subY, ... } during pointer drag
   moveCount: 0,     // Moves this level
   soundOn: true,
 };

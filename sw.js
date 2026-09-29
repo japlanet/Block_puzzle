@@ -6,7 +6,7 @@
 // always opens offline. Bump CACHE_VERSION whenever you deploy a change — the
 // old cache is deleted on activate and the page reloads itself (see main.js).
 
-const CACHE_VERSION = 'animal-escape-v4';
+const CACHE_VERSION = 'animal-escape-v5';
 // All the games share japlanet.github.io and so share one set of caches: only
 // ever delete this game's own old caches, never another game's.
 const CACHE_PREFIX = 'animal-escape-';
