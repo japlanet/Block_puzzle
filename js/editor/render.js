@@ -2,7 +2,7 @@
 // Reuses the same block-rendering approach as the game so WYSIWYG matches play.
 
 import { state, ANIMAL_EMOJI } from './state.js';
-import { COLORS as GAME_COLORS, ANIMALS, createBlockElement, positionBlockElement } from '../render.js';
+import { COLORS as GAME_COLORS, createBlockElement } from '../render.js';
 import { cellsOf } from '../geometry.js';
 import { state as gameState } from '../state.js';
 
@@ -75,8 +75,7 @@ export function renderAll() {
 
   // Blocks.
   for (const b of lv.blocks) {
-    createBlockElement(b);
-    positionBlockElement(b);
+    createBlockElement(b, boardEl);
     const el = document.getElementById('bg-' + b.id);
     if (el) el.classList.remove('bg');
     if (el) el.classList.add('bg');

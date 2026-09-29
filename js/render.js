@@ -114,10 +114,11 @@ function placeGate(g, wrap, board) {
   wrap.appendChild(el);
 }
 
-/** Build a new block DOM element and place it on the board. Called once per level. */
-export function createBlockElement(b) {
-  const board = document.getElementById('board');
-  const cs = state.cellSize;
+/**
+ * Build a new block DOM element and place it on the board. Called once per level.
+ * The level editor passes its own board (#editorBoard); the game uses #board.
+ */
+export function createBlockElement(b, board = document.getElementById('board')) {
   const g = document.createElement('div');
   g.id = 'bg-' + b.id;
   g.className = 'bg';
