@@ -10,15 +10,17 @@ export const ANIMAL_EMOJI = {
 };
 
 function emptyLevel(cols = 8, rows = 8, label = 'My Level') {
-  return { cols, rows, label, blocks: [], gates: [], walls: [] };
+  return { cols, rows, label, blocks: [], gates: [], walls: [], holes: [] };
 }
 
 export const state = {
   level: emptyLevel(),
   // Active tool: one of
-  //   { type: 'block', color: 'red', dir: 'free', pendingCells: Set<'c,r'>, editingId: string|null }
-  //   { type: 'gate', color: 'red', size: 2 }
+  //   { type: 'block', color: 'red', dir: 'free', ice: 0, key: false, lock: false,
+  //     pendingCells: Set<'c,r'>, editingId: string|null }
+  //   { type: 'gate', color: 'red', size: 2, lock: false }
   //   { type: 'wall' }
+  //   { type: 'hole' }
   //   { type: 'eraser' }
   //   null
   tool: null,
@@ -35,7 +37,8 @@ function deepClone(lv) {
     label: lv.label,
     blocks: lv.blocks.map(b => ({ ...b, shape: b.shape.map(p => [p[0], p[1]]) })),
     gates: lv.gates.map(g => ({ ...g })),
-    walls: lv.walls.map(w => ({ ...w })),
+    walls: (lv.walls || []).map(w => ({ ...w })),
+    holes: (lv.holes || []).map(h => ({ ...h })),
   };
 }
 
@@ -87,11 +90,14 @@ export function setTool(tool) {
   notify();
 }
 
-export function startNewBlock(color, dir = 'free') {
+export function startNewBlock(color, dir = 'free', extras = {}) {
   state.tool = {
     type: 'block',
     color,
     dir,
+    ice: extras.ice || 0,
+    key: !!extras.key,
+    lock: !!extras.lock,
     pendingCells: new Set(),
     editingId: null,
   };
@@ -106,6 +112,9 @@ export function startEditBlock(blockId) {
     type: 'block',
     color: b.color,
     dir: b.dir,
+    ice: b.ice || 0,
+    key: !!b.key,
+    lock: !!b.lock,
     pendingCells: cells,
     editingId: b.id,
   };
@@ -128,11 +137,15 @@ export function finishPendingBlock() {
   const minR = Math.min(...cells.map(x => x[1]));
   const shape = cells.map(([c, r]) => [c - minC, r - minR]);
 
+  const extras = {};
+  if (t.ice) extras.ice = t.ice;
+  if (t.key) extras.key = true;
+  else if (t.lock) extras.lock = true;
   mutate(lv => {
     if (t.editingId) {
       const idx = lv.blocks.findIndex(b => b.id === t.editingId);
       if (idx >= 0) {
-        lv.blocks[idx] = { id: t.editingId, col: minC, row: minR, color: t.color, dir: t.dir, shape };
+        lv.blocks[idx] = { id: t.editingId, col: minC, row: minR, color: t.color, dir: t.dir, shape, ...extras };
       }
     } else {
       // Pick an ID that isn't taken.
@@ -143,7 +156,7 @@ export function finishPendingBlock() {
         id = prefix + i;
         if (!existing.has(id)) break;
       }
-      lv.blocks.push({ id, col: minC, row: minR, color: t.color, dir: t.dir, shape });
+      lv.blocks.push({ id, col: minC, row: minR, color: t.color, dir: t.dir, shape, ...extras });
     }
   });
   cancelPendingBlock();
@@ -156,11 +169,12 @@ export function cancelPendingBlock() {
 }
 
 // ── Gates ────────────────────────────────────────────────────────
-export function addGate({ side, color, size, exit_row, exit_col }) {
+export function addGate({ side, color, size, exit_row, exit_col, lock }) {
   mutate(lv => {
     const g = { side, color, size };
     if (side === 'left' || side === 'right') g.exit_row = exit_row;
     else g.exit_col = exit_col;
+    if (lock) g.lock = true;
     lv.gates.push(g);
   });
 }
@@ -174,6 +188,19 @@ export function toggleWall(col, row) {
     const i = lv.walls.findIndex(w => w.col === col && w.row === row);
     if (i >= 0) lv.walls.splice(i, 1);
     else lv.walls.push({ col, row });
+  });
+}
+
+// ── Holes (cells cut out of the board to shape it) ──────────────
+export function toggleHole(col, row) {
+  mutate(lv => {
+    if (!lv.holes) lv.holes = [];
+    const i = lv.holes.findIndex(h => h.col === col && h.row === row);
+    if (i >= 0) lv.holes.splice(i, 1);
+    else {
+      lv.holes.push({ col, row });
+      lv.walls = lv.walls.filter(w => w.col !== col || w.row !== row);
+    }
   });
 }
 
@@ -197,6 +224,7 @@ export function resizeGrid(cols, rows) {
       return true;
     });
     lv.walls = lv.walls.filter(w => w.col < cols && w.row < rows);
+    lv.holes = (lv.holes || []).filter(h => h.col < cols && h.row < rows);
     lv.gates = lv.gates.filter(g => {
       const sz = g.size || 1;
       if (g.side === 'left' || g.side === 'right') return g.exit_row + sz <= rows && g.exit_row >= 0;
@@ -252,5 +280,5 @@ export function stashForTestPlay() {
 
 /** True iff the level has anything worth saving. */
 export function isNonEmpty(lv = state.level) {
-  return lv.blocks.length > 0 || lv.gates.length > 0 || lv.walls.length > 0;
+  return lv.blocks.length > 0 || lv.gates.length > 0 || lv.walls.length > 0 || (lv.holes || []).length > 0;
 }

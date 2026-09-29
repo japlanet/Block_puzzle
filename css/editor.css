@@ -212,6 +212,17 @@ button.colorTool[data-color="teal"]   { background: #48dbfb22; }
 #editorBoard .cell.wall-cell {
   cursor: pointer;
 }
+/* Shaped boards: the outline comes from the game's board-shape SVG; cut-out
+   cells stay visible as dashed ghosts so they can be clicked back in. */
+#editorBoard.shaped { background: transparent; border-color: transparent; box-shadow: none; }
+#editorBoard .cell.hole-cell {
+  visibility: visible;
+  background: transparent;
+  border: 1px dashed #d4c4ea;
+}
+#editorBoard .cell.hole-cell:hover { background: rgba(232, 223, 255, 0.5); }
+.toolOptions label.check { display: flex; align-items: center; gap: 6px; font-weight: 600; }
+.toolOptions label.check input { width: auto; margin: 0; }
 #editorBoard .cell.pending {
   outline: 3px dashed var(--accent);
   outline-offset: -3px;

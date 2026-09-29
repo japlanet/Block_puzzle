@@ -4,8 +4,8 @@
 // CSS transform so the drag feels pixel-accurate, not grid-snappy.
 
 import { state } from './state.js';
-import { canMove } from './geometry.js';
-import { positionBlockElement, setBlockClass } from './render.js';
+import { canMove, isFree } from './geometry.js';
+import { positionBlockElement, setBlockClass, nudgeStuck } from './render.js';
 import { playSfx, initAudio, resumeIfSuspended } from './audio.js';
 import { stopHint } from './hint.js';
 
@@ -34,6 +34,14 @@ function onDown(e, id) {
 
   const b = state.blocks.find(x => x.id === id);
   if (!b) return;
+
+  // Frozen or padlocked: no drag, just a shiver that points at the reason
+  // (its snowflakes, or the animal with the key).
+  if (!isFree(b, state.level, state.blocks)) {
+    playSfx('stuck');
+    nudgeStuck(b, state.blocks);
+    return;
+  }
 
   // Every press starts a drag, even on the already-selected block; a tap
   // (press + release without moving) on the selected block deselects it.

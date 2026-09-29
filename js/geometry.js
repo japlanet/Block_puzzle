@@ -24,20 +24,47 @@ export function overlaps(a, b) {
   return cellsOf(b).some(({ c, r }) => s.has(c + ',' + r));
 }
 
+const NONE = [];
+const blockedCache = new WeakMap();   // level -> { walls, holes, nw, nh, all, holeSet }
+
+function cellCache(level) {
+  const walls = level.walls || NONE, holes = level.holes || NONE;
+  let e = blockedCache.get(level);
+  // The editor edits levels in place, so check the arrays haven't changed.
+  if (!e || e.walls !== walls || e.holes !== holes || e.nw !== walls.length || e.nh !== holes.length) {
+    const holeSet = new Set(holes.map(h => h.col + ',' + h.row));
+    const all = new Set(holeSet);
+    for (const w of walls) all.add(w.col + ',' + w.row);
+    e = { walls, holes, nw: walls.length, nh: holes.length, all, holeSet };
+    blockedCache.set(level, e);
+  }
+  return e;
+}
+
+/**
+ * Cells a block can never enter: rocks (`walls`) and `holes`, the cells cut
+ * out of the rectangle to give the board its shape. Set of "c,r" keys.
+ */
+export function blockedCells(level) {
+  return cellCache(level).all;
+}
+
+/** Is (c,r) part of the board's shape (inside the grid and not a hole)? */
+export function onBoard(level, c, r) {
+  if (c < 0 || c >= level.cols || r < 0 || r >= level.rows) return false;
+  return !cellCache(level).holeSet.has(c + ',' + r);
+}
+
 /**
  * Can block `b` move by (dc, dr) in the given level, without leaving the board,
- * hitting a wall, or overlapping another block in `blocks`?
+ * hitting a wall or hole, or overlapping another block in `blocks`?
  */
 export function canMove(b, dc, dr, level, blocks) {
   const test = { ...b, col: b.col + dc, row: b.row + dr };
+  const blocked = blockedCells(level);
   for (const { c, r } of cellsOf(test)) {
     if (c < 0 || c >= level.cols || r < 0 || r >= level.rows) return false;
-  }
-  if (level.walls && level.walls.length) {
-    const ws = new Set(level.walls.map(w => w.col + ',' + w.row));
-    for (const { c, r } of cellsOf(test)) {
-      if (ws.has(c + ',' + r)) return false;
-    }
+    if (blocked.has(c + ',' + r)) return false;
   }
   for (const o of blocks) {
     if (o.id === b.id) continue;
@@ -46,27 +73,95 @@ export function canMove(b, dc, dr, level, blocks) {
   return true;
 }
 
+/**
+ * The board edge a gate sits on: the outermost board column (left/right gates)
+ * or row (top/bottom gates) across the gate's span. On a plain rectangle that
+ * is the grid edge; on a shaped board it can be an inner edge, such as the
+ * inside of an L. Returns null if the span's cells don't share one edge line.
+ */
+const lineCache = new WeakMap();   // gate -> { key, line }
+
+export function gateLine(g, level) {
+  // Hot path for the hint search: cache per gate, keyed on everything it reads.
+  const holes = level.holes || NONE;
+  const key = `${level.cols},${level.rows},${holes.length},${g.side},${g.size},${g.exit_row},${g.exit_col}`;
+  const hit = lineCache.get(g);
+  if (hit && hit.key === key && hit.holes === holes) return hit.line;
+  const line = computeGateLine(g, level);
+  lineCache.set(g, { key, holes, line });
+  return line;
+}
+
+function computeGateLine(g, level) {
+  const sz = g.size || 1;
+  const vertical = g.side === 'left' || g.side === 'right';
+  const start = vertical ? g.exit_row : g.exit_col;
+  let line = null;
+  for (let i = start; i < start + sz; i++) {
+    let edge = null;
+    const n = vertical ? level.cols : level.rows;
+    for (let j = 0; j < n; j++) {
+      const on = vertical ? onBoard(level, j, i) : onBoard(level, i, j);
+      if (!on) continue;
+      if (g.side === 'left' || g.side === 'top') { edge = j; break; }
+      edge = j;
+    }
+    if (edge === null || (line !== null && edge !== line)) return null;
+    line = edge;
+  }
+  return line;
+}
+
 /** Is block `b` fully aligned with gate `g` (matching color assumed)? */
 export function atGate(b, g, level) {
+  const line = gateLine(g, level);
+  if (line === null) return false;
   const cells = cellsOf(b);
   const sz = g.size || 1;
-  if (g.side === 'right') {
-    const edge = cells.filter(({ c }) => c === level.cols - 1);
+  if (g.side === 'left' || g.side === 'right') {
+    const beyond = g.side === 'right' ? (({ c }) => c > line) : (({ c }) => c < line);
+    if (cells.some(beyond)) return false;
+    const edge = cells.filter(({ c }) => c === line);
     return edge.length > 0 && edge.every(({ r }) => r >= g.exit_row && r < g.exit_row + sz);
   }
-  if (g.side === 'left') {
-    const edge = cells.filter(({ c }) => c === 0);
-    return edge.length > 0 && edge.every(({ r }) => r >= g.exit_row && r < g.exit_row + sz);
-  }
-  if (g.side === 'bottom') {
-    const edge = cells.filter(({ r }) => r === level.rows - 1);
-    return edge.length > 0 && edge.every(({ c }) => c >= g.exit_col && c < g.exit_col + sz);
-  }
-  if (g.side === 'top') {
-    const edge = cells.filter(({ r }) => r === 0);
-    return edge.length > 0 && edge.every(({ c }) => c >= g.exit_col && c < g.exit_col + sz);
-  }
-  return false;
+  const beyond = g.side === 'bottom' ? (({ r }) => r > line) : (({ r }) => r < line);
+  if (cells.some(beyond)) return false;
+  const edge = cells.filter(({ r }) => r === line);
+  return edge.length > 0 && edge.every(({ c }) => c >= g.exit_col && c < g.exit_col + sz);
+}
+
+// ── Frozen animals and padlocks ────────────────────────────────────
+// Both depend only on which animals have gone home so far, so the solvers can
+// work them out from the live blocks alone:
+//   ice: N   — frozen until N animals (any colour) have gone home.
+//   key      — carries the key; lock: true — padlocked (an animal or a door),
+//              opens once every key carrier has gone home.
+
+/** How many animals have gone home, given the live blocks. */
+export function homeCount(level, blocks) {
+  return level.blocks.length - blocks.length;
+}
+
+/** Snowflakes left on a frozen block (0 = thawed). */
+export function iceLeft(b, level, blocks) {
+  return Math.max(0, (b.ice || 0) - homeCount(level, blocks));
+}
+
+/** Are the padlocks still shut (some key carrier is still on the board)? */
+export function locksShut(level, blocks) {
+  return blocks.some(b => b.key);
+}
+
+/** Can this block be moved right now (not frozen, not padlocked)? */
+export function isFree(b, level, blocks) {
+  if (iceLeft(b, level, blocks) > 0) return false;
+  if (b.lock && locksShut(level, blocks)) return false;
+  return true;
+}
+
+/** Is this door open right now? */
+export function gateOpen(g, level, blocks) {
+  return !(g.lock && locksShut(level, blocks));
 }
 
 /** All directions a block is allowed to move, based on its `dir` lock. */

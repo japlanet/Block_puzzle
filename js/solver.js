@@ -13,9 +13,14 @@
 //      identify the blockers, and suggest moving a blocker out of the way.
 //   4. Last resort — any legal move (never hit on the bundled 60 levels).
 //
+// Frozen and padlocked animals count as immovable until they are free, and a
+// padlocked door lets nobody through until the key has gone home (see
+// geometry.js). Everything is worked out from the live blocks, so the tiers
+// below only need to skip what can't move right now.
+//
 // All four tiers run in O(blocks × cells) so hint taps feel instant.
 
-import { atGate, directionsOf } from './geometry.js';
+import { atGate, directionsOf, isFree, gateOpen, blockedCells } from './geometry.js';
 
 const EMPTY = 0;
 const WALL = -1;
@@ -23,9 +28,7 @@ const WALL = -1;
 function buildGrid(level, blocks) {
   const cols = level.cols;
   const grid = new Int8Array(cols * level.rows);
-  if (level.walls) {
-    for (const w of level.walls) grid[w.row * cols + w.col] = WALL;
-  }
+  markBlocked(level, grid);
   for (let i = 0; i < blocks.length; i++) {
     const b = blocks[i];
     const shape = b.shape;
@@ -34,6 +37,43 @@ function buildGrid(level, blocks) {
     }
   }
   return grid;
+}
+
+/** Mark rocks and holes as WALL in a grid. */
+function markBlocked(level, grid) {
+  for (const k of blockedCells(level)) {
+    const i = k.indexOf(',');
+    grid[+k.slice(i + 1) * level.cols + +k.slice(0, i)] = WALL;
+  }
+}
+
+/** Would `block` at (col,row) go home through an open door of its colour? */
+function exitsAt(level, block, col, row, blocks) {
+  const probe = { ...block, col, row };
+  return level.gates.some(g => g.color === block.color && gateOpen(g, level, blocks) && atGate(probe, g, level));
+}
+
+/**
+ * Apply one move to a copy of `blocks`, then let anything now sitting at an
+ * open door of its colour go home too (a padlocked door opening, or ice
+ * melting, can release an animal that was already waiting there). Mirrors
+ * the game loop in main.js.
+ */
+export function applyMove(level, blocks, move) {
+  const next = blocks.map(b => b.id === move.id ? { ...b, col: move.col, row: move.row } : b);
+  // Ice melts and padlocks open only when someone goes home.
+  if (!move.exited) return next;
+  return settle(level, next.filter(b => b.id !== move.id));
+}
+
+/** Remove every free block that sits at an open door of its colour, until none do. */
+export function settle(level, blocks) {
+  let cur = blocks;
+  for (;;) {
+    const leaving = cur.filter(b => isFree(b, level, cur) && exitsAt(level, b, b.col, b.row, cur));
+    if (!leaving.length) return cur;
+    cur = cur.filter(b => !leaving.includes(b));
+  }
 }
 
 /** Can a block placed at (col,row) with `shape` fit in the grid, treating `selfIdx+1` as self? */
@@ -60,9 +100,10 @@ function fullSlide(block, blockIdx, dc, dr, grid, cols, rows) {
 // ── Tier 1: direct exit ──────────────────────────────────────────
 function tryDirectExit(level, blocks, grid) {
   for (const gate of level.gates) {
+    if (!gateOpen(gate, level, blocks)) continue;
     for (let bi = 0; bi < blocks.length; bi++) {
       const b = blocks[bi];
-      if (b.color !== gate.color) continue;
+      if (b.color !== gate.color || !isFree(b, level, blocks)) continue;
       const dirs = directionsOf(b);
       // Try every direction — not just the one that matches gate side — because
       // rotated free blocks can approach a side gate from any axis.
@@ -133,6 +174,7 @@ function tryClearPath(level, blocks) {
 
   for (let bi = 0; bi < blocks.length; bi++) {
     const b = blocks[bi];
+    if (!isFree(b, level, blocks)) continue;
     // Rebuild grid per block so we can mask out that block (treat the rest as walls).
     const grid = buildGrid(level, blocks);
     const shape = b.shape;
@@ -140,7 +182,7 @@ function tryClearPath(level, blocks) {
       grid[(b.row + shape[j][1]) * level.cols + (b.col + shape[j][0])] = EMPTY;
     }
     for (const gate of level.gates) {
-      if (gate.color !== b.color) continue;
+      if (gate.color !== b.color || !gateOpen(gate, level, blocks)) continue;
       const path = singleBlockPath(level, b, gate, grid);
       if (!path || path.length < 2) continue;
       if (bestPath === null || path.length < bestPath.length) {
@@ -152,12 +194,7 @@ function tryClearPath(level, blocks) {
   }
   if (!bestPath) return null;
   const [nc, nr] = bestPath[1];
-  return { id: bestBlock.id, col: nc, row: nr, exited: bestPath.length === 2 && willExit(level, bestBlock, nc, nr) };
-}
-
-function willExit(level, block, col, row) {
-  const probe = { ...block, col, row };
-  return level.gates.some(g => g.color === block.color && atGate(probe, g, level));
+  return { id: bestBlock.id, col: nc, row: nr, exited: exitsAt(level, bestBlock, nc, nr, blocks) };
 }
 
 // ── Tier 3: unblock someone's path (with verification) ──────────
@@ -171,7 +208,8 @@ function willExit(level, block, col, row) {
 function tryUnblock(level, blocks) {
   const cols = level.cols, rows = level.rows;
   const wallsOnlyGrid = new Int8Array(cols * rows);
-  if (level.walls) for (const w of level.walls) wallsOnlyGrid[w.row * cols + w.col] = WALL;
+  markBlocked(level, wallsOnlyGrid);
+  const open = g => gateOpen(g, level, blocks);
 
   // For each live block, record its current clear-path length (or Infinity if blocked).
   function pathLengthFor(blocksArr, bi, gate) {
@@ -183,8 +221,9 @@ function tryUnblock(level, blocks) {
   }
   const current = blocks.map((b, bi) => {
     let best = Infinity;
+    if (!isFree(b, level, blocks)) return Infinity;
     for (const g of level.gates) {
-      if (g.color !== b.color) continue;
+      if (g.color !== b.color || !open(g)) continue;
       best = Math.min(best, pathLengthFor(blocks, bi, g));
     }
     return best;
@@ -194,8 +233,9 @@ function tryUnblock(level, blocks) {
   const candidates = [];
   for (let bi = 0; bi < blocks.length; bi++) {
     const b = blocks[bi];
+    if (!isFree(b, level, blocks)) continue;
     for (const gate of level.gates) {
-      if (gate.color !== b.color) continue;
+      if (gate.color !== b.color || !open(gate)) continue;
       const ideal = singleBlockPath(level, b, gate, wallsOnlyGrid);
       if (!ideal) continue;
       const idealCells = new Set();
@@ -209,7 +249,7 @@ function tryUnblock(level, blocks) {
         for (const [dc, dr] of o.shape) {
           if (idealCells.has((o.col + dc) + ',' + (o.row + dr))) { hits = true; break; }
         }
-        if (hits) candidates.push(oi);
+        if (hits && isFree(o, level, blocks)) candidates.push(oi);
       }
     }
   }
@@ -235,9 +275,10 @@ function tryUnblock(level, blocks) {
       for (let bi = 0; bi < simulated.length; bi++) {
         if (bi === oi) continue;
         const b = simulated[bi];
+        if (!isFree(b, level, simulated)) continue;
         let best2 = Infinity;
         for (const g of level.gates) {
-          if (g.color !== b.color) continue;
+          if (g.color !== b.color || !open(g)) continue;
           best2 = Math.min(best2, pathLengthFor(simulated, bi, g));
         }
         if (isFinite(best2) && best2 < current[bi]) { improved = true; break; }
@@ -246,8 +287,9 @@ function tryUnblock(level, blocks) {
       // Prefer the move that leaves the smallest min-path.
       const simMin = Math.min(...simulated.map((b, bi) => {
         let best2 = Infinity;
+        if (!isFree(b, level, simulated)) return best2;
         for (const g of level.gates) {
-          if (g.color !== b.color) continue;
+          if (g.color !== b.color || !open(g)) continue;
           best2 = Math.min(best2, pathLengthFor(simulated, bi, g));
         }
         return best2;
@@ -265,12 +307,18 @@ function tryUnblock(level, blocks) {
 
 // ── Tier 4: bounded A* search ─────────────────────────────────────
 /**
- * A* over full-slide states with heuristic h = number of live blocks
- * (admissible — every remaining block needs ≥1 move to exit). Handles puzzles
- * where greedy deadlocks (e.g. two interlocking pieces need a dance).
- * Synchronous, budget-capped. Returns the first move or null.
+ * Weighted A* over full-slide states: f = moves so far + 3 × live blocks.
+ * The weight makes it head for fewer animals first, so it finds a (not
+ * necessarily shortest) solution in a fraction of the nodes plain A* needs on
+ * the bigger shaped levels. Handles puzzles where greedy deadlocks (e.g. two
+ * interlocking pieces need a dance, or the key has to go home first).
+ * Synchronous, budget-capped. Returns the first move or null; when it finds a
+ * whole solution it hands every step to `remember(stateKey, move)` so the
+ * following hint taps are instant.
  */
-function tryAstar(level, blocks, { budget = 40000 } = {}) {
+const ASTAR_WEIGHT = 3;
+
+function tryAstar(level, blocks, { budget = 40000, remember = () => {} } = {}) {
   const cols = level.cols, rows = level.rows;
 
   function keyOf(bs) {
@@ -284,8 +332,7 @@ function tryAstar(level, blocks, { budget = 40000 } = {}) {
   function cloneList(bs) {
     const out = new Array(bs.length);
     for (let i = 0; i < bs.length; i++) {
-      const b = bs[i];
-      out[i] = { id: b.id, col: b.col, row: b.row, color: b.color, dir: b.dir, shape: b.shape };
+      out[i] = { ...bs[i] };
     }
     return out;
   }
@@ -294,24 +341,14 @@ function tryAstar(level, blocks, { budget = 40000 } = {}) {
     const out = [];
     for (let i = 0; i < bs.length; i++) {
       const b = bs[i];
+      if (!isFree(b, level, bs)) continue;
       const dirs = directionsOf(b);
       for (const [dc, dr] of dirs) {
         const landing = fullSlide(b, i, dc, dr, g, cols, rows);
         if (!landing) continue;
-        const moved = { ...b, col: landing.col, row: landing.row };
-        let exited = false;
-        for (const gate of level.gates) {
-          if (gate.color === moved.color && atGate(moved, gate, level)) { exited = true; break; }
-        }
-        let next;
-        if (exited) {
-          next = cloneList(bs);
-          next.splice(i, 1);
-        } else {
-          next = cloneList(bs);
-          next[i] = moved;
-        }
-        out.push({ nextBlocks: next, move: { id: b.id, col: landing.col, row: landing.row, exited } });
+        const exited = exitsAt(level, b, landing.col, landing.row, bs);
+        const move = { id: b.id, col: landing.col, row: landing.row, exited };
+        out.push({ nextBlocks: cloneList(applyMove(level, bs, move)), move });
       }
     }
     return out;
@@ -324,7 +361,7 @@ function tryAstar(level, blocks, { budget = 40000 } = {}) {
   const startKey = keyOf(blocks);
   parents.set(startKey, { prevKey: null, move: null });
   gScore.set(startKey, 0);
-  heap.push([blocks.length, 0, blocks, startKey]);
+  heap.push([ASTAR_WEIGHT * blocks.length, 0, blocks, startKey]);
 
   let tieBreaker = 1;
   let expanded = 0;
@@ -347,6 +384,9 @@ function tryAstar(level, blocks, { budget = 40000 } = {}) {
   while (heap.size() > 0 && expanded < budget) {
     const [, , current, currentKey] = heap.pop();
     if (current.length === 0) {
+      for (let key = currentKey; parents.get(key).move; key = parents.get(key).prevKey) {
+        remember(parents.get(key).prevKey, parents.get(key).move);
+      }
       return firstMoveTo(currentKey);
     }
     expanded++;
@@ -361,7 +401,7 @@ function tryAstar(level, blocks, { budget = 40000 } = {}) {
       if (gScore.has(k) && gScore.get(k) <= tentative) continue;
       parents.set(k, { prevKey: currentKey, move });
       gScore.set(k, tentative);
-      heap.push([tentative + nextBlocks.length, tieBreaker++, nextBlocks, k]);
+      heap.push([tentative + ASTAR_WEIGHT * nextBlocks.length, tieBreaker++, nextBlocks, k]);
     }
   }
 
@@ -411,10 +451,11 @@ function anyLegalMove(level, blocks) {
   const grid = buildGrid(level, blocks);
   for (let bi = 0; bi < blocks.length; bi++) {
     const b = blocks[bi];
+    if (!isFree(b, level, blocks)) continue;
     const dirs = directionsOf(b);
     for (const [dc, dr] of dirs) {
       const landing = fullSlide(b, bi, dc, dr, grid, level.cols, level.rows);
-      if (landing) return { id: b.id, col: landing.col, row: landing.row, exited: false };
+      if (landing) return { id: b.id, col: landing.col, row: landing.row, exited: exitsAt(level, b, landing.col, landing.row, blocks) };
     }
   }
   return null;
@@ -443,7 +484,7 @@ export function nextHintMove(level, blocks) {
   let move = tryDirectExit(level, blocks, grid);
   if (!move) move = tryClearPath(level, blocks);
   if (!move) move = tryUnblock(level, blocks);
-  if (!move) move = tryAstar(level, blocks);
+  if (!move) move = tryAstar(level, blocks, { remember: (k, m) => { if (!perLevel.has(k)) perLevel.set(k, m); } });
   if (!move) move = anyLegalMove(level, blocks);
 
   perLevel.set(key, move);
@@ -456,7 +497,7 @@ export function nextHintMove(level, blocks) {
  * move; if the state ever loops without shrinking, it gives up.
  */
 export function solve(level, startBlocks, { maxMoves = 400 } = {}) {
-  const blocks = startBlocks.map(b => ({ ...b, shape: b.shape.map(p => [p[0], p[1]]) }));
+  let blocks = startBlocks.map(b => ({ ...b, shape: b.shape.map(p => [p[0], p[1]]) }));
   const seen = new Set();
   const moves = [];
   while (blocks.length > 0 && moves.length < maxMoves) {
@@ -465,10 +506,8 @@ export function solve(level, startBlocks, { maxMoves = 400 } = {}) {
     seen.add(key);
     const move = nextHintMove(level, blocks);
     if (!move) return null;
-    const idx = blocks.findIndex(b => b.id === move.id);
-    if (idx < 0) return null;
-    blocks[idx] = { ...blocks[idx], col: move.col, row: move.row };
-    if (move.exited) blocks.splice(idx, 1);
+    if (!blocks.some(b => b.id === move.id)) return null;
+    blocks = applyMove(level, blocks, move);
     moves.push(move);
   }
   if (blocks.length === 0) return { moves, visited: moves.length };

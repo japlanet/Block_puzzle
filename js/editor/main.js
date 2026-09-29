@@ -27,7 +27,7 @@ function showToast(msg) {
 function refreshPanels() {
   const vPanel = document.getElementById('validation');
   const issues = validateLevel(state.level);
-  if (!state.level.blocks.length && !state.level.gates.length && !state.level.walls.length) {
+  if (!isNonEmpty()) {
     vPanel.className = 'panel';
     vPanel.innerHTML = '<em>Empty level. Start placing blocks and gates.</em>';
   } else if (issues.length === 0) {

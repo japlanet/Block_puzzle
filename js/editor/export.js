@@ -24,27 +24,22 @@ export function serializeLevel(lv) {
     out.push('    ' + inline(b) + comma);
   });
   out.push('  ],');
-  if (lv.walls && lv.walls.length) {
-    out.push('  "gates": [');
-    lv.gates.forEach((g, i) => {
-      const comma = i < lv.gates.length - 1 ? ',' : '';
-      out.push('    ' + inline(g) + comma);
-    });
-    out.push('  ],');
-    out.push('  "walls": [');
-    lv.walls.forEach((w, i) => {
-      const comma = i < lv.walls.length - 1 ? ',' : '';
+  // Same layout as tools/levelfmt.py: gates, then walls and holes if any.
+  const lists = [['walls', lv.walls || []], ['holes', lv.holes || []]].filter(([, v]) => v.length);
+  out.push('  "gates": [');
+  lv.gates.forEach((g, i) => {
+    const comma = i < lv.gates.length - 1 ? ',' : '';
+    out.push('    ' + inline(g) + comma);
+  });
+  out.push('  ]' + (lists.length ? ',' : ''));
+  lists.forEach(([name, cells], li) => {
+    out.push(`  "${name}": [`);
+    cells.forEach((w, i) => {
+      const comma = i < cells.length - 1 ? ',' : '';
       out.push('    ' + inline(w) + comma);
     });
-    out.push('  ]');
-  } else {
-    out.push('  "gates": [');
-    lv.gates.forEach((g, i) => {
-      const comma = i < lv.gates.length - 1 ? ',' : '';
-      out.push('    ' + inline(g) + comma);
-    });
-    out.push('  ]');
-  }
+    out.push('  ]' + (li < lists.length - 1 ? ',' : ''));
+  });
   out.push('}');
   return out.join('\n');
 }

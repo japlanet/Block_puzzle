@@ -24,7 +24,11 @@ export function buildPalette() {
         return;
       }
       const dir = document.getElementById('blockDir').value || 'free';
-      startNewBlock(c, dir);
+      startNewBlock(c, dir, {
+        ice: +document.getElementById('blockIce').value || 0,
+        key: document.getElementById('blockKey').checked,
+        lock: document.getElementById('blockLock').checked,
+      });
     });
     grid.appendChild(btn);
   }
@@ -47,6 +51,24 @@ export function wireToolButtons() {
     }
   });
 
+  document.getElementById('blockIce').addEventListener('change', () => {
+    if (state.tool && state.tool.type === 'block') state.tool.ice = +document.getElementById('blockIce').value || 0;
+  });
+  // An animal either carries the key or is padlocked, not both.
+  for (const [id, other] of [['blockKey', 'blockLock'], ['blockLock', 'blockKey']]) {
+    document.getElementById(id).addEventListener('change', () => {
+      const on = document.getElementById(id).checked;
+      if (on) document.getElementById(other).checked = false;
+      if (state.tool && state.tool.type === 'block') {
+        state.tool.key = document.getElementById('blockKey').checked;
+        state.tool.lock = document.getElementById('blockLock').checked;
+      }
+    });
+  }
+  document.getElementById('gateLock').addEventListener('change', () => {
+    if (state.tool && state.tool.type === 'gate') state.tool.lock = document.getElementById('gateLock').checked;
+  });
+
   document.getElementById('finishBlock').addEventListener('click', () => {
     finishPendingBlock();
   });
@@ -66,7 +88,10 @@ export function wireToolButtons() {
           setTool(null);
           return;
         }
-        setTool({ type: 'gate', color, size });
+        setTool({ type: 'gate', color, size, lock: document.getElementById('gateLock').checked });
+      } else if (name === 'hole') {
+        if (state.tool && state.tool.type === 'hole') { setTool(null); return; }
+        setTool({ type: 'hole' });
       } else if (name === 'wall') {
         if (state.tool && state.tool.type === 'wall') { setTool(null); return; }
         setTool({ type: 'wall' });
@@ -104,5 +129,9 @@ export function syncToolUI() {
   document.getElementById('gateOptions').hidden  = !(t && t.type === 'gate');
   if (t && t.type === 'block') {
     document.getElementById('blockDir').value = t.dir || 'free';
+    document.getElementById('blockIce').value = String(t.ice || 0);
+    document.getElementById('blockKey').checked = !!t.key;
+    document.getElementById('blockLock').checked = !!t.lock;
   }
+  if (t && t.type === 'gate') document.getElementById('gateLock').checked = !!t.lock;
 }

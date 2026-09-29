@@ -41,6 +41,16 @@
           <option value="v">Vertical only</option>
         </select>
       </label>
+      <label>Frozen
+        <select id="blockIce">
+          <option value="0">No</option>
+          <option value="1">❄ until 1 animal is home</option>
+          <option value="2">❄❄ until 2 are home</option>
+          <option value="3">❄❄❄ until 3 are home</option>
+        </select>
+      </label>
+      <label class="check"><input id="blockKey" type="checkbox"> 🔑 Carries the key</label>
+      <label class="check"><input id="blockLock" type="checkbox"> 🔒 Padlocked (opens when the key is home)</label>
       <p class="hint">Click cells to build the block. Same-color cells merge. Click an existing cell to remove it.</p>
       <button id="finishBlock" class="primary">✓ Finish block</button>
       <button id="cancelBlock">Cancel</button>
@@ -59,10 +69,12 @@
           <option value="3">3 cells</option>
         </select>
       </label>
+      <label class="check"><input id="gateLock" type="checkbox"> 🔒 Padlocked</label>
       <p class="hint">Click on an outside-edge slot to place.</p>
     </div>
 
     <button class="tool" data-tool="wall">🧱 Wall</button>
+    <button class="tool" data-tool="hole">🕳️ Cut out (shape the board)</button>
     <button class="tool" data-tool="eraser">✕ Eraser</button>
 
     <h3>History</h3>
@@ -77,7 +89,7 @@
     <div id="editorWrap">
       <div id="editorBoard"></div>
     </div>
-    <p class="legend muted">Grid-edge slots place gates · interior cells place blocks/walls · active tool is highlighted</p>
+    <p class="legend muted">Edge slots place gates · cells place blocks, walls and cut-outs · active tool is highlighted</p>
   </main>
 
   <!-- Right: validation / actions -->

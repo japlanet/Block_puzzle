@@ -3,7 +3,7 @@
 
 import {
   state, setTool, togglePendingCell, startEditBlock,
-  removeBlock, toggleWall, addGate, removeGate, undo, redo,
+  removeBlock, toggleWall, toggleHole, addGate, removeGate, undo, redo,
 } from './state.js';
 import { renderAll } from './render.js';
 
@@ -16,7 +16,7 @@ export function wireInput() {
     const slot = e.target.closest('.edgeSlot');
     if (slot && t && t.type === 'gate') {
       const side = slot.dataset.side;
-      const base = { side, color: t.color, size: t.size };
+      const base = { side, color: t.color, size: t.size, lock: !!t.lock };
       if (side === 'left' || side === 'right') base.exit_row = +slot.dataset.exitRow;
       else base.exit_col = +slot.dataset.exitCol;
       // Refuse if the cells overlap an existing gate on that side.
@@ -55,6 +55,15 @@ export function wireInput() {
     const cell = e.target.closest('.cell');
     if (cell) {
       const c = +cell.dataset.col, r = +cell.dataset.row;
+      const isHole = (state.level.holes || []).some(h => h.col === c && h.row === r);
+      if (t && t.type === 'hole') {
+        const occupied = state.level.blocks.some(b =>
+          b.shape.some(([dc, dr]) => b.col + dc === c && b.row + dr === r));
+        if (!occupied) toggleHole(c, r);
+        return;
+      }
+      if (t && t.type === 'eraser' && isHole) { toggleHole(c, r); return; }
+      if (isHole) return;
       if (t && t.type === 'block') {
         // Can't put a block on a wall.
         const isWall = state.level.walls.some(w => w.col === c && w.row === r);
@@ -98,6 +107,8 @@ export function wireInput() {
       setTool(null);
     } else if (e.key.toLowerCase() === 'w') {
       setTool({ type: 'wall' });
+    } else if (e.key.toLowerCase() === 'h') {
+      setTool({ type: 'hole' });
     } else if (e.key.toLowerCase() === 'e') {
       setTool({ type: 'eraser' });
     } else if (e.key.toLowerCase() === 'g') {

@@ -513,6 +513,93 @@ body {
   opacity: 0.4;
 }
 
+/* ── Shaped boards ──────────────────────────────────────────── */
+/* A board with holes drops the rectangular frame; an SVG outline traced
+   around its cells (render.js boardShapeSVG) draws the shape instead. */
+#board.shaped {
+  background: transparent;
+  border-color: transparent;
+  box-shadow: none;
+}
+.board-shape {
+  /* First child of the board and no z-index: the (positioned) cells after it paint on top. */
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  pointer-events: none;
+  overflow: visible;
+}
+#board.shaped .cell { position: relative; }
+.hole-cell { visibility: hidden; }
+
+/* ── Frozen animals ─────────────────────────────────────────── */
+.ice { position: absolute; left: 0; top: 0; pointer-events: none; z-index: 13; }
+.ice svg { display: block; }
+.ice.melting { animation: iceMelt 0.62s ease-in forwards; }
+@keyframes iceMelt {
+  0%   { opacity: 1; transform: scale(1); filter: blur(0); }
+  30%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 0; transform: scale(1.12); filter: blur(3px); }
+}
+.pips {
+  position: absolute;
+  display: flex;
+  gap: 1px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 14;
+}
+.pip { width: var(--ps); height: var(--ps); }
+.pip svg { display: block; width: 100%; height: 100%; }
+.pip.gone { animation: pipPop 0.45s ease-out forwards; }
+@keyframes pipPop {
+  0%   { transform: scale(1); opacity: 1; }
+  40%  { transform: scale(1.45) rotate(30deg); opacity: 1; }
+  100% { transform: scale(0.2) rotate(60deg); opacity: 0; width: 0; }
+}
+.pips.melting { animation: iceMelt 0.62s ease-in forwards; }
+.pips.pulse .pip:not(.gone) { animation: pipPulse 0.35s ease-in-out 2; }
+@keyframes pipPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.35); }
+}
+
+/* ── Keys and padlocks ──────────────────────────────────────── */
+.badge { position: absolute; pointer-events: none; z-index: 15; }
+.badge svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.gate-lock { z-index: 6; }
+.block-key { animation: keyBob 2.4s ease-in-out infinite; transform-origin: 50% 50%; }
+@keyframes keyBob {
+  0%, 100% { transform: rotate(-6deg); }
+  50%      { transform: rotate(6deg) translateY(-1px); }
+}
+.block-key.glint { animation: keyGlint 0.55s ease-in-out 2; }
+@keyframes keyGlint {
+  0%, 100% { transform: scale(1); filter: brightness(1); }
+  50%      { transform: scale(1.4) rotate(-10deg); filter: brightness(1.3) drop-shadow(0 0 6px #fff3a0); }
+}
+.badge.pulse { animation: pipPulse 0.35s ease-in-out 2; }
+.badge.opening { animation: lockOpen 0.9s ease-out forwards; }
+@keyframes lockOpen {
+  0%   { transform: scale(1); opacity: 1; }
+  25%  { transform: scale(1.3) rotate(-8deg); opacity: 1; }
+  60%  { transform: scale(1.2) translateY(-6px); opacity: 1; }
+  100% { transform: scale(0.6) translateY(-18px); opacity: 0; }
+}
+/* Padlocked animals and doors look a little sleepy until the key is home. */
+.bg.locked > svg, .bg.locked > .face { filter: saturate(0.55) brightness(0.97); transition: filter 0.4s; }
+.gate { transition: filter 0.4s; }
+.gate.locked { filter: saturate(0.45) brightness(0.95); }
+/* Pressed while it can't move yet: a shiver of the art (the block itself carries the drag transform). */
+.bg.shiver > svg, .bg.shiver > .da, .bg.shiver > .face, .bg.shiver > .ice, .bg.shiver > .badge {
+  animation: shiver 0.5s ease-in-out;
+}
+@keyframes shiver {
+  0%, 100% { transform: translateX(0); }
+  15%, 55% { transform: translateX(-2.5px); }
+  35%, 75% { transform: translateX(2.5px); }
+}
+
 /* ── Tutorial ───────────────────────────────────────────────── */
 #tutorial {
   position: fixed;
@@ -569,7 +656,8 @@ body {
 
 /* Accessibility: respect reduced-motion preference */
 @media (prefers-reduced-motion: reduce) {
-  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble, .bg.bump > svg, .bg.bump > .da, .bg.bump > .face, .critter .lid {
+  .bg, .bg.sel, .gate, #oe, #hf::before, .bubble, .bg.bump > svg, .bg.bump > .da, .bg.bump > .face, .critter .lid,
+  .block-key, .bg.shiver > *, .pips.pulse .pip, .badge.pulse, .block-key.glint {
     animation: none !important;
   }
 }

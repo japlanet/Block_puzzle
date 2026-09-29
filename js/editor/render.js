@@ -2,8 +2,8 @@
 // Reuses the same block-rendering approach as the game so WYSIWYG matches play.
 
 import { state, ANIMAL_EMOJI } from './state.js';
-import { COLORS as GAME_COLORS, createBlockElement } from '../render.js';
-import { cellsOf } from '../geometry.js';
+import { COLORS as GAME_COLORS, createBlockElement, markWallsAndHoles, gateBox, gateLockBadge } from '../render.js';
+import { gateLine } from '../geometry.js';
 import { state as gameState } from '../state.js';
 
 let cellSize = 56;
@@ -42,23 +42,23 @@ export function renderAll() {
   boardEl.style.width  = `${cellSize * lv.cols}px`;
   boardEl.style.height = `${cellSize * lv.rows}px`;
 
-  // Cells.
-  const walls = new Set((lv.walls || []).map(w => w.col + ',' + w.row));
+  // Cells, then rocks, cut-outs and the board's outline (same as the game).
   for (let r = 0; r < lv.rows; r++) {
     for (let c = 0; c < lv.cols; c++) {
       const d = document.createElement('div');
-      d.className = 'cell' + (walls.has(c + ',' + r) ? ' wall-cell' : '');
+      d.className = 'cell';
       d.dataset.col = c;
       d.dataset.row = r;
       boardEl.appendChild(d);
     }
   }
+  markWallsAndHoles(boardEl, lv);
 
   // Pending block preview: mark cells we're about to commit.
   if (state.tool && state.tool.type === 'block' && state.tool.pendingCells) {
     for (const k of state.tool.pendingCells) {
       const [c, r] = k.split(',').map(Number);
-      const cell = boardEl.children[r * lv.cols + c];
+      const cell = boardEl.querySelector(`.cell[data-col="${c}"][data-row="${r}"]`);
       if (cell) cell.classList.add('pending');
     }
   }
@@ -88,8 +88,10 @@ export function renderAll() {
 
 function placeGate(g, idx) {
   const lv = state.level;
+  const box = gateBox(g, lv, cellSize);
+  if (!box) return; // not on the board's edge (validation panel says why)
   const el = document.createElement('div');
-  el.className = 'gate';
+  el.className = 'gate' + (g.lock ? ' locked' : '');
   el.dataset.gateIndex = idx;
   const col = GAME_COLORS[g.color];
   el.style.background = `linear-gradient(135deg, ${col.bg}, ${col.brd})`;
@@ -103,78 +105,29 @@ function placeGate(g, idx) {
   el.style.fontSize = '18px';
   el.style.fontWeight = '700';
   el.textContent = ANIMAL_EMOJI[g.color] || '⭐';
-
-  const gw = Math.round(cellSize * 0.4);
-  const sz = g.size || 1;
-  if (g.side === 'right') {
-    el.style.left = `${cellSize * lv.cols}px`;
-    el.style.top  = `${g.exit_row * cellSize}px`;
-    el.style.width = `${gw}px`;
-    el.style.height = `${cellSize * sz}px`;
-    el.style.borderRadius = '0 14px 14px 0';
-    el.style.borderLeft = 'none';
-  } else if (g.side === 'left') {
-    el.style.left = `${-gw}px`;
-    el.style.top  = `${g.exit_row * cellSize}px`;
-    el.style.width = `${gw}px`;
-    el.style.height = `${cellSize * sz}px`;
-    el.style.borderRadius = '14px 0 0 14px';
-    el.style.borderRight = 'none';
-  } else if (g.side === 'bottom') {
-    el.style.top = `${cellSize * lv.rows}px`;
-    el.style.left = `${g.exit_col * cellSize}px`;
-    el.style.height = `${gw}px`;
-    el.style.width = `${cellSize * sz}px`;
-    el.style.borderRadius = '0 0 14px 14px';
-    el.style.borderTop = 'none';
-  } else {
-    el.style.top = `${-gw}px`;
-    el.style.left = `${g.exit_col * cellSize}px`;
-    el.style.height = `${gw}px`;
-    el.style.width = `${cellSize * sz}px`;
-    el.style.borderRadius = '14px 14px 0 0';
-    el.style.borderBottom = 'none';
-  }
+  el.style.left = box.left + 'px';
+  el.style.top = box.top + 'px';
+  el.style.width = box.width + 'px';
+  el.style.height = box.height + 'px';
+  el.style.borderRadius = { right: '0 14px 14px 0', left: '14px 0 0 14px', bottom: '0 0 14px 14px', top: '14px 14px 0 0' }[g.side];
+  el.style['border' + { right: 'Left', left: 'Right', bottom: 'Top', top: 'Bottom' }[g.side]] = 'none';
   boardEl.appendChild(el);
+  if (g.lock) boardEl.appendChild(gateLockBadge(box.left + box.width / 2, box.top + box.height / 2, cellSize, idx));
 }
 
+/** Clickable slots wherever a gate of the chosen size fits on the board's edge (inner edges too). */
 function renderEdgeSlots() {
   const lv = state.level;
-  const t = state.tool;
-  const sz = t.size || 1;
-  const slotT = Math.round(cellSize * 0.4);
-
-  // Right slots
-  for (let r = 0; r + sz <= lv.rows; r++) {
-    addEdgeSlot({
-      side: 'right', exit_row: r,
-      left: cellSize * lv.cols, top: r * cellSize,
-      width: slotT, height: cellSize * sz,
-    });
-  }
-  // Left slots
-  for (let r = 0; r + sz <= lv.rows; r++) {
-    addEdgeSlot({
-      side: 'left', exit_row: r,
-      left: -slotT, top: r * cellSize,
-      width: slotT, height: cellSize * sz,
-    });
-  }
-  // Top slots
-  for (let c = 0; c + sz <= lv.cols; c++) {
-    addEdgeSlot({
-      side: 'top', exit_col: c,
-      left: c * cellSize, top: -slotT,
-      width: cellSize * sz, height: slotT,
-    });
-  }
-  // Bottom slots
-  for (let c = 0; c + sz <= lv.cols; c++) {
-    addEdgeSlot({
-      side: 'bottom', exit_col: c,
-      left: c * cellSize, top: cellSize * lv.rows,
-      width: cellSize * sz, height: slotT,
-    });
+  const sz = state.tool.size || 1;
+  for (const side of ['right', 'left', 'top', 'bottom']) {
+    const vertical = side === 'left' || side === 'right';
+    const n = vertical ? lv.rows : lv.cols;
+    for (let i = 0; i + sz <= n; i++) {
+      const g = { side, size: sz, [vertical ? 'exit_row' : 'exit_col']: i };
+      if (gateLine(g, lv) === null) continue;
+      const box = gateBox(g, lv, cellSize);
+      addEdgeSlot({ side, exit_row: vertical ? i : undefined, exit_col: vertical ? undefined : i, ...box });
+    }
   }
 }
 

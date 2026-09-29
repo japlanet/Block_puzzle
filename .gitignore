@@ -14,3 +14,6 @@
 # Build / scratch
 /tmp/
 *.log
+
+# Scratch output of tools/generate.py (the chosen levels go into data/levels.json)
+tools/generated-*.json

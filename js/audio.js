@@ -220,6 +220,16 @@ const EXIT_MOTIFS = {
 
 export function playSfx(type, opts = {}) {
   if (!ctx || !state.soundOn) return;
+  // Sound must never break a turn: an interrupted iPad audio session can make
+  // Web Audio calls throw, and the exit/unlock flow calls this mid-update.
+  try {
+    playSfxUnsafe(type, opts);
+  } catch (e) {
+    console.warn('[audio] sfx failed:', type, e);
+  }
+}
+
+function playSfxUnsafe(type, opts) {
   resumeIfSuspended();
   const t0 = ctx.currentTime;
   duckMusic(0.5, 0.2);
@@ -231,6 +241,77 @@ export function playSfx(type, opts = {}) {
   if (type === 'hint')       return sfxHint(t0);
   if (type === 'invalid')    return sfxInvalid(t0);
   if (type === 'select')     return sfxSelect(t0);
+  if (type === 'stuck')      return sfxStuck(t0);
+  if (type === 'crack')      return sfxCrack(t0);
+  if (type === 'thaw')       return sfxThaw(t0);
+  if (type === 'unlock')     return sfxUnlock(t0);
+}
+
+/** Pressing a frozen or padlocked animal: a soft two-note "uh-uh" with a tiny rattle. */
+function sfxStuck(t0) {
+  [['E', 4], ['C', 4]].forEach(([n, oc], i) => {
+    const start = t0 + i * 0.12;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq(n, oc);
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.16, start + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.13);
+    osc.connect(g); g.connect(sfxGain);
+    osc.start(start); osc.stop(start + 0.15);
+  });
+  noiseBurst(t0, 0.005, 0.06, { lowcut: 3000, peak: 0.05 });
+}
+
+/** A snowflake melts: a bright little ice tick. */
+function sfxCrack(t0) {
+  noiseBurst(t0, 0.002, 0.07, { lowcut: 4000, peak: 0.12 });
+  const osc = ctx.createOscillator();
+  const g = ctx.createGain();
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq('B', 6), t0);
+  osc.frequency.exponentialRampToValueAtTime(freq('E', 6), t0 + 0.08);
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(0.12, t0 + 0.005);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.14);
+  osc.connect(g); g.connect(sfxGain);
+  osc.start(t0); osc.stop(t0 + 0.16);
+}
+
+/** The ice is gone: a shatter and a falling sparkle. */
+function sfxThaw(t0) {
+  noiseBurst(t0, 0.003, 0.22, { lowcut: 2500, peak: 0.16 });
+  [['G', 6], ['E', 6], ['C', 6], ['G', 5]].forEach(([n, oc], i) => {
+    const start = t0 + 0.04 + i * 0.06;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq(n, oc);
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.12, start + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.16);
+    osc.connect(g); g.connect(sfxGain);
+    osc.start(start); osc.stop(start + 0.18);
+  });
+}
+
+/** Padlocks spring open: click-clack, then a happy rising chime. */
+function sfxUnlock(t0) {
+  noiseBurst(t0, 0.002, 0.04, { lowcut: 2000, peak: 0.14 });
+  noiseBurst(t0 + 0.08, 0.002, 0.04, { lowcut: 1500, peak: 0.12 });
+  [['C', 5], ['E', 5], ['G', 5], ['C', 6]].forEach(([n, oc], i) => {
+    const start = t0 + 0.14 + i * 0.07;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq(n, oc);
+    g.gain.setValueAtTime(0.0001, start);
+    g.gain.exponentialRampToValueAtTime(0.18, start + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, start + 0.24);
+    osc.connect(g); g.connect(sfxGain);
+    osc.start(start); osc.stop(start + 0.26);
+  });
 }
 
 function sfxTap(t0) {

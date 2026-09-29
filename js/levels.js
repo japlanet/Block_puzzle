@@ -4,6 +4,8 @@
 // overlap, orphan color, off-board gate, block collision) is logged to the
 // console so authoring bugs surface loudly instead of stacking silently.
 
+import { gateLine } from './geometry.js';
+
 export async function loadLevels(url = 'data/levels.json') {
   const res = await fetch(url, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Failed to load ${url}: ${res.status}`);
@@ -36,21 +38,27 @@ export function validateLevel(lv) {
       seen.set(k, g.color);
     }
   }
-  // 2. Gate off-board.
+  // 2. Gate off-board, or not on the board's edge (shaped boards).
   for (const g of lv.gates) {
     const sz = g.size || 1;
     if (g.side === 'left' || g.side === 'right') {
       if (g.exit_row == null) { issues.push(`${g.color} ${g.side} gate missing exit_row`); continue; }
       if (g.exit_row < 0 || g.exit_row + sz > lv.rows) {
         issues.push(`${g.color} ${g.side} gate rows ${g.exit_row}..${g.exit_row + sz - 1} off-board (0..${lv.rows - 1})`);
+        continue;
       }
     } else if (g.side === 'top' || g.side === 'bottom') {
       if (g.exit_col == null) { issues.push(`${g.color} ${g.side} gate missing exit_col`); continue; }
       if (g.exit_col < 0 || g.exit_col + sz > lv.cols) {
         issues.push(`${g.color} ${g.side} gate cols ${g.exit_col}..${g.exit_col + sz - 1} off-board (0..${lv.cols - 1})`);
+        continue;
       }
     } else {
       issues.push(`unknown gate side ${JSON.stringify(g.side)}`);
+      continue;
+    }
+    if (gateLine(g, lv) === null) {
+      issues.push(`${g.color} ${g.side} gate isn't on one straight stretch of the board's edge`);
     }
   }
   // 3. Orphan colors — every block color needs ≥1 gate and vice-versa.
@@ -58,8 +66,9 @@ export function validateLevel(lv) {
   const gateColors = new Set(lv.gates.map(g => g.color));
   for (const c of blockColors) if (!gateColors.has(c)) issues.push(`block color ${c} has no matching gate`);
   for (const c of gateColors) if (!blockColors.has(c)) issues.push(`gate color ${c} has no matching block`);
-  // 4. Blocks off-board / on walls / overlapping each other.
+  // 4. Blocks off-board / on walls or holes / overlapping each other.
   const walls = new Set((lv.walls || []).map(w => w.col + ',' + w.row));
+  const holes = new Set((lv.holes || []).map(h => h.col + ',' + h.row));
   const occupied = new Map();
   for (const b of lv.blocks) {
     for (const [dc, dr] of b.shape) {
@@ -69,11 +78,24 @@ export function validateLevel(lv) {
       }
       const k = c + ',' + r;
       if (walls.has(k)) issues.push(`block ${b.id} overlaps wall at (${c},${r})`);
+      if (holes.has(k)) issues.push(`block ${b.id} sits in a hole at (${c},${r})`);
       if (occupied.has(k)) issues.push(`block ${b.id} overlaps block ${occupied.get(k)} at (${c},${r})`);
       occupied.set(k, b.id);
     }
   }
-  // 5. Duplicate IDs.
+  // 5. Frozen animals and padlocks.
+  const hasKey = lv.blocks.some(b => b.key);
+  const hasLock = lv.blocks.some(b => b.lock) || lv.gates.some(g => g.lock);
+  if (hasLock && !hasKey) issues.push('padlocks but no animal carries a key');
+  if (hasKey && !hasLock) issues.push('a key but nothing is padlocked');
+  for (const b of lv.blocks) {
+    if (b.ice && !(Number.isInteger(b.ice) && b.ice > 0 && b.ice < lv.blocks.length)) {
+      issues.push(`block ${b.id} ice ${b.ice} must be 1..${lv.blocks.length - 1}`);
+    }
+    if (b.key && b.lock) issues.push(`block ${b.id} both carries a key and is padlocked`);
+  }
+  for (const w of lv.walls || []) if (holes.has(w.col + ',' + w.row)) issues.push(`wall at (${w.col},${w.row}) is in a hole`);
+  // 6. Duplicate IDs.
   const ids = new Set();
   for (const b of lv.blocks) {
     if (ids.has(b.id)) issues.push(`duplicate block id ${b.id}`);
@@ -82,18 +104,20 @@ export function validateLevel(lv) {
   return issues;
 }
 
-/** Return the outer-edge cells a gate occupies (one step outside the board). */
+/** Return the cells just outside the board edge that a gate occupies. */
 function gateEdgeCells(lv, g) {
   const sz = g.size || 1;
   const out = [];
-  if (g.side === 'right')  for (let r = g.exit_row; r < g.exit_row + sz; r++) out.push([lv.cols, r]);
-  if (g.side === 'left')   for (let r = g.exit_row; r < g.exit_row + sz; r++) out.push([-1, r]);
-  if (g.side === 'bottom') for (let c = g.exit_col; c < g.exit_col + sz; c++) out.push([c, lv.rows]);
-  if (g.side === 'top')    for (let c = g.exit_col; c < g.exit_col + sz; c++) out.push([c, -1]);
+  const line = gateLine(g, lv);
+  if (line === null) return out;
+  if (g.side === 'right')  for (let r = g.exit_row; r < g.exit_row + sz; r++) out.push([line + 1, r]);
+  if (g.side === 'left')   for (let r = g.exit_row; r < g.exit_row + sz; r++) out.push([line - 1, r]);
+  if (g.side === 'bottom') for (let c = g.exit_col; c < g.exit_col + sz; c++) out.push([c, line + 1]);
+  if (g.side === 'top')    for (let c = g.exit_col; c < g.exit_col + sz; c++) out.push([c, line - 1]);
   return out;
 }
 
-function normalizeLevel(lv) {
+export function normalizeLevel(lv) {
   return {
     cols: lv.cols,
     rows: lv.rows,
@@ -101,11 +125,12 @@ function normalizeLevel(lv) {
     blocks: (lv.blocks || []).map(normalizeBlock),
     gates: (lv.gates || []).map(g => ({ ...g })),
     walls: (lv.walls || []).map(w => ({ ...w })),
+    holes: (lv.holes || []).map(h => ({ ...h })),
   };
 }
 
-function normalizeBlock(b) {
-  return {
+export function normalizeBlock(b) {
+  const out = {
     id: b.id,
     col: b.col,
     row: b.row,
@@ -113,16 +138,13 @@ function normalizeBlock(b) {
     dir: b.dir || 'free',
     shape: b.shape.map(p => Array.isArray(p) ? [p[0], p[1]] : [p.dc, p.dr]),
   };
+  if (b.ice) out.ice = b.ice;
+  if (b.key) out.key = true;
+  if (b.lock) out.lock = true;
+  return out;
 }
 
 /** Snapshot-clone the blocks of a level for a fresh play session. */
 export function cloneBlocks(level) {
-  return level.blocks.map(b => ({
-    id: b.id,
-    col: b.col,
-    row: b.row,
-    color: b.color,
-    dir: b.dir,
-    shape: b.shape.map(p => [p[0], p[1]]),
-  }));
+  return level.blocks.map(normalizeBlock);
 }

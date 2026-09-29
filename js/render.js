@@ -1,11 +1,12 @@
-// Board rendering: grid cells, walls, gates, blocks.
+// Board rendering: grid cells, walls, holes, gates, blocks.
 // Blocks are created once per level (SVG + drawn animal head are static).
 // Subsequent updates just reposition via CSS transform, enabling smooth
 // sub-cell drag.
 
 import { state } from './state.js';
-import { cellsOf, bbox } from './geometry.js';
+import { cellsOf, bbox, gateLine, iceLeft, locksShut } from './geometry.js';
 import { critterSVG } from './critters.js';
+import { snowflakeSVG, keySVG, padlockSVG } from './badges.js';
 
 export const COLORS = {
   red:    { bg: '#ff6b6b', brd: '#e55050', arr: 'rgba(255,255,255,0.5)', light: '#ffe0e0' },
@@ -32,9 +33,10 @@ export function calcCellSize() {
   const lv = state.level;
   const maxW = Math.min(window.innerWidth - 28, 520);
   const maxH = window.innerHeight - 180;
+  // Doors stick out 0.4 cell above and below the board (see renderBoard).
   state.cellSize = Math.max(24, Math.min(
     Math.floor(maxW / lv.cols),
-    Math.floor(maxH / lv.rows),
+    Math.floor(maxH / (lv.rows + 0.8)),
     72
   ));
 }
@@ -59,26 +61,119 @@ export function renderBoard() {
     }
   }
 
-  if (lv.walls && lv.walls.length) {
-    const cells = board.querySelectorAll('.cell');
-    for (const w of lv.walls) {
-      const idx = w.row * lv.cols + w.col;
-      if (cells[idx]) cells[idx].className = 'cell wall-cell';
-    }
-  }
+  markWallsAndHoles(board, lv);
 
   const wrap = document.getElementById('bw');
-  wrap.querySelectorAll('.gate').forEach(e => e.remove());
+  wrap.querySelectorAll('.gate, .gate-lock').forEach(e => e.remove());
+  // Room for top and bottom doors (and their padlocks), so they never run
+  // into the top bar or the buttons below.
+  wrap.style.margin = `${Math.round(cs * 0.4)}px 0`;
   // Defer so the board has settled in layout before we measure.
   requestAnimationFrame(() => {
-    for (const g of lv.gates) placeGate(g, wrap, board);
+    lv.gates.forEach((g, i) => placeGate(g, wrap, board, i));
+    refreshStatus(lv, state.blocks, { instant: true });
   });
 
   for (const b of state.blocks) createBlockElement(b);
+  refreshStatus(lv, state.blocks, { instant: true });
   document.getElementById('ll').textContent = lv.label;
 }
 
-function placeGate(g, wrap, board) {
+/**
+ * Style the rock and hole cells of a freshly built grid (cells in row-major
+ * order). A board with holes gets the `shaped` class and a drawn outline that
+ * follows its shape instead of the rectangular frame. Shared with the editor.
+ */
+export function markWallsAndHoles(board, lv) {
+  const cells = board.querySelectorAll('.cell');
+  for (const w of lv.walls || []) {
+    const el = cells[w.row * lv.cols + w.col];
+    if (el) el.classList.add('wall-cell');
+  }
+  for (const h of lv.holes || []) {
+    const el = cells[h.row * lv.cols + h.col];
+    if (el) { el.classList.remove('wall-cell'); el.classList.add('hole-cell'); }
+  }
+  board.querySelectorAll('.board-shape').forEach(e => e.remove());
+  const shaped = !!(lv.holes && lv.holes.length);
+  board.classList.toggle('shaped', shaped);
+  if (shaped) board.prepend(boardShapeSVG(lv, state.cellSize));
+}
+
+/**
+ * The board's outline as one SVG path traced around the cells that are not
+ * holes (outer edge and any inner lakes), filled like the rectangular board
+ * and stroked like its frame. Sits under the cells.
+ */
+function boardShapeSVG(lv, cs) {
+  const holes = new Set((lv.holes || []).map(h => h.col + ',' + h.row));
+  const inside = (c, r) => c >= 0 && r >= 0 && c < lv.cols && r < lv.rows && !holes.has(c + ',' + r);
+  // Directed boundary edges with the board on their right-hand side
+  // (clockwise on screen), keyed by start corner.
+  const edges = new Map();
+  const add = (x1, y1, x2, y2) => {
+    const k = x1 + ',' + y1;
+    if (!edges.has(k)) edges.set(k, []);
+    edges.get(k).push([x2, y2]);
+  };
+  for (let r = 0; r < lv.rows; r++) for (let c = 0; c < lv.cols; c++) {
+    if (!inside(c, r)) continue;
+    if (!inside(c, r - 1)) add(c, r, c + 1, r);
+    if (!inside(c + 1, r)) add(c + 1, r, c + 1, r + 1);
+    if (!inside(c, r + 1)) add(c + 1, r + 1, c, r + 1);
+    if (!inside(c - 1, r)) add(c, r + 1, c, r);
+  }
+  const B = 3; // the board's border width: cells start 3px inside the SVG
+  let d = '';
+  for (const [start, outs] of edges) {
+    while (outs.length) {
+      let [x, y] = start.split(',').map(Number);
+      const pts = [[x, y]];
+      let next = outs.pop();
+      while (next) {
+        const [nx, ny] = next;
+        pts.push([nx, ny]);
+        if (nx + ',' + ny === start) break;
+        const cand = edges.get(nx + ',' + ny) || [];
+        // At a pinch corner prefer the right turn so loops stay separate.
+        const [px, py] = pts[pts.length - 2];
+        const dx = nx - px, dy = ny - py;
+        let pick = cand.findIndex(([qx, qy]) => (qx - nx) === -dy && (qy - ny) === dx);
+        if (pick < 0) pick = 0;
+        next = cand.splice(pick, 1)[0];
+      }
+      // Keep only the corners.
+      const corners = pts.filter((p, i) => {
+        if (i === 0 || i === pts.length - 1) return true;
+        const a = pts[i - 1], b = pts[i + 1];
+        return (p[0] - a[0]) * (b[1] - p[1]) !== (p[1] - a[1]) * (b[0] - p[0]);
+      });
+      d += 'M' + corners.map(([px, py]) => `${B + px * cs} ${B + py * cs}`).join(' L') + ' Z ';
+    }
+  }
+  const W = lv.cols * cs + 2 * B, H = lv.rows * cs + 2 * B;
+  const el = document.createElementNS(SVG_NS, 'svg');
+  el.setAttribute('class', 'board-shape');
+  el.setAttribute('width', W);
+  el.setAttribute('height', H);
+  el.innerHTML = `<path d="${d}" fill="#f8f4ff" fill-rule="evenodd" stroke="#d8c8f0" stroke-width="${2 * B + 2}" stroke-linejoin="round"/>`
+    + `<path d="${d}" fill="none" fill-rule="evenodd" stroke="rgba(100,60,150,0.08)" stroke-width="3" stroke-linejoin="round"/>`;
+  return el;
+}
+
+/** Pixel box of a gate relative to the board's top-left border corner. */
+export function gateBox(g, lv, cs) {
+  const gw = cs * 0.4;
+  const sz = g.size || 1;
+  const line = gateLine(g, lv);
+  if (line === null) return null;
+  if (g.side === 'right')  return { left: cs * (line + 1), top: g.exit_row * cs, width: gw, height: cs * sz };
+  if (g.side === 'left')   return { left: cs * line - gw, top: g.exit_row * cs, width: gw, height: cs * sz };
+  if (g.side === 'bottom') return { left: g.exit_col * cs, top: cs * (line + 1), width: cs * sz, height: gw };
+  return { left: g.exit_col * cs, top: cs * line - gw, width: cs * sz, height: gw };
+}
+
+function placeGate(g, wrap, board, index) {
   const cs = state.cellSize;
   const lv = state.level;
   const el = document.createElement('div');
@@ -94,24 +189,36 @@ function placeGate(g, wrap, board) {
   const bx = br.left - wr.left;
   const by = br.top - wr.top;
   const gw = cs * 0.4;
-  const sz = g.size;
+  const box = gateBox(g, lv, cs);
+  if (!box) return;
 
-  const base = `border-radius:14px;`;
-  if (g.side === 'right') {
-    el.style.cssText += `;${base}width:${gw}px;height:${cs * sz}px;left:${bx + cs * lv.cols}px;top:${by + g.exit_row * cs}px;border-radius:0 14px 14px 0;border-left:none;`;
-  } else if (g.side === 'left') {
-    el.style.cssText += `;${base}width:${gw}px;height:${cs * sz}px;left:${bx - gw}px;top:${by + g.exit_row * cs}px;border-radius:14px 0 0 14px;border-right:none;`;
-  } else if (g.side === 'bottom') {
-    el.style.cssText += `;${base}height:${gw}px;width:${cs * sz}px;top:${by + cs * lv.rows}px;left:${bx + g.exit_col * cs}px;border-radius:0 0 14px 14px;border-top:none;`;
-  } else { // top
-    el.style.cssText += `;${base}height:${gw}px;width:${cs * sz}px;top:${by - gw}px;left:${bx + g.exit_col * cs}px;border-radius:14px 14px 0 0;border-bottom:none;`;
-  }
+  const radius = { right: '0 14px 14px 0', left: '14px 0 0 14px', bottom: '0 0 14px 14px', top: '14px 14px 0 0' }[g.side];
+  const noBorder = { right: 'left', left: 'right', bottom: 'top', top: 'bottom' }[g.side];
+  el.style.cssText += `;width:${box.width}px;height:${box.height}px;left:${bx + box.left}px;top:${by + box.top}px;`
+    + `border-radius:${radius};border-${noBorder}:none;`;
   el.style.background = `linear-gradient(135deg, ${col.bg}, ${col.brd})`;
   // The animal who lives behind this door (no blinking: keeps doors calm and cheap).
   el.innerHTML = critterSVG(g.color, { blink: false, size: Math.round(gw * 0.95) });
   el.dataset.color = g.color;
   el.dataset.side = g.side;
+  el.dataset.gateIndex = index;
   wrap.appendChild(el);
+  if (g.lock) {
+    // The padlock hangs on the door (a sibling: the door clips its children).
+    el.classList.add('locked');
+    wrap.appendChild(gateLockBadge(bx + box.left + box.width / 2, by + box.top + box.height / 2, cs, index));
+  }
+}
+
+/** A padlock centred on (x, y), for a padlocked door. Shared with the editor. */
+export function gateLockBadge(x, y, cs, index) {
+  const lock = document.createElement('div');
+  lock.className = 'badge gate-lock';
+  const ls = Math.round(Math.max(22, Math.min(cs * 0.6, 40)));
+  lock.style.cssText = `left:${x - ls / 2}px;top:${y - ls / 2}px;width:${ls}px;height:${ls}px;`;
+  lock.dataset.gateIndex = index;
+  lock.innerHTML = padlockSVG();
+  return lock;
 }
 
 /**
@@ -255,6 +362,19 @@ function drawBlockInterior(g, b) {
   face.innerHTML = critterSVG(b.color, { blinkDelay: Math.random() * 4.6 });
   g.appendChild(face);
 
+  if (b.ice) addIce(g, b, paths, W, H, { fx, fy, size });
+  if (b.key || b.lock) {
+    // Key: a sticker on the head's shoulder. Padlock: hung over the chin.
+    const bs = Math.max(20, Math.min(size * 0.52, cs * 0.62));
+    const badge = document.createElement('div');
+    badge.className = 'badge ' + (b.key ? 'block-key' : 'block-lock');
+    const bxp = b.key ? fx + size * 0.5 - bs * 0.62 : fx - bs / 2;
+    const byp = b.key ? fy - size * 0.5 - bs * 0.2 : fy + size * 0.5 - bs * 0.78;
+    badge.style.cssText = `left:${bxp}px;top:${byp}px;width:${bs}px;height:${bs}px;`;
+    badge.innerHTML = b.key ? keySVG() : padlockSVG();
+    g.appendChild(badge);
+  }
+
   // Direction arrowheads for constrained blocks, at both ends of the piece.
   if (constrained) {
     const a = document.createElement('div');
@@ -275,6 +395,123 @@ function drawBlockInterior(g, b) {
     }
     a.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="${SVG_NS}"><path d="${d}" fill="${ac}" stroke="${ac}" stroke-width="${sw}" stroke-linejoin="round"/>${extra}</svg>`;
     g.appendChild(a);
+  }
+}
+
+/**
+ * Frozen animal: a frosty sheet over the whole piece (same outline) with a row
+ * of snowflakes, one per animal that still has to go home before it thaws.
+ */
+function addIce(g, b, paths, W, H, { fx, fy, size }) {
+  const cs = state.cellSize;
+  const ice = document.createElement('div');
+  ice.className = 'ice';
+  const gid = 'ice' + b.id;
+  // A few diagonal glints clipped to the piece.
+  let glints = '';
+  for (let x = -H; x < W; x += cs * 1.3) {
+    glints += `<path d="M${x} ${H} L${x + H} 0" stroke="rgba(255,255,255,0.55)" stroke-width="${cs * 0.07}"/>`
+      + `<path d="M${x + cs * 0.22} ${H} L${x + H + cs * 0.22} 0" stroke="rgba(255,255,255,0.35)" stroke-width="${cs * 0.03}"/>`;
+  }
+  ice.innerHTML = `<svg width="${W}" height="${H}" xmlns="${SVG_NS}" style="overflow:visible">`
+    + `<defs><clipPath id="${gid}c"><path d="${paths}"/></clipPath>`
+    + `<linearGradient id="${gid}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="rgba(235,250,255,0.5)"/><stop offset="1" stop-color="rgba(150,215,245,0.42)"/></linearGradient></defs>`
+    + `<path d="${paths}" fill="url(#${gid}g)"/>`
+    + `<g clip-path="url(#${gid}c)">${glints}</g>`
+    + `<path d="${paths}" fill="none" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"/>`
+    + `<path d="${paths}" fill="none" stroke="rgba(80,170,220,0.7)" stroke-width="1.5" stroke-linejoin="round"/>`
+    + `</svg>`;
+  g.appendChild(ice);
+
+  const pips = document.createElement('div');
+  pips.className = 'pips';
+  const ps = Math.round(Math.max(18, Math.min(cs * 0.42, 30)));
+  pips.style.cssText = `left:${fx}px;top:${fy + size * 0.5 - ps * 0.55}px;--ps:${ps}px;`;
+  for (let i = 0; i < b.ice; i++) {
+    const p = document.createElement('div');
+    p.className = 'pip';
+    p.innerHTML = snowflakeSVG();
+    pips.appendChild(p);
+  }
+  g.appendChild(pips);
+}
+
+/**
+ * Bring the ice and padlocks in line with how many animals have gone home.
+ * Melted snowflakes pop, fully thawed ice shatters, and padlocks spring open
+ * once the key is home. Safe to call any time (no-op when nothing changed).
+ * `instant` (after a re-render) skips the animations.
+ * Returns what changed: { cracked, thawed, unlocked } for the sound effects.
+ */
+export function refreshStatus(level, blocks, { instant = false, root = document } = {}) {
+  const out = { cracked: false, thawed: false, unlocked: false };
+  for (const b of blocks) {
+    const el = root.querySelector('#bg-' + CSS.escape(b.id));
+    if (!el) continue;
+    if (b.ice) {
+      const left = iceLeft(b, level, blocks);
+      const pips = [...el.querySelectorAll('.pip:not(.gone)')];
+      for (let i = left; i < pips.length; i++) {
+        if (instant) pips[i].remove(); else pips[i].classList.add('gone');
+        out.cracked = true;
+      }
+      const ice = el.querySelector('.ice:not(.melting)');
+      if (left === 0 && ice) {
+        out.thawed = true;
+        const pipRow = el.querySelector('.pips');
+        if (instant) { ice.remove(); pipRow?.remove(); }
+        else {
+          ice.classList.add('melting');
+          pipRow?.classList.add('melting');
+          setTimeout(() => { ice.remove(); pipRow?.remove(); }, 650);
+        }
+      }
+      el.classList.toggle('frozen', left > 0);
+    }
+    if (b.lock) {
+      const shut = locksShut(level, blocks);
+      el.classList.toggle('locked', shut);
+      if (!shut && openBadge(el.querySelector('.block-lock'), instant)) out.unlocked = true;
+    }
+  }
+  if (!locksShut(level, blocks)) {
+    for (const gEl of root.querySelectorAll('.gate.locked')) gEl.classList.remove('locked');
+    for (const lock of root.querySelectorAll('.gate-lock')) {
+      if (openBadge(lock, instant)) out.unlocked = true;
+    }
+  }
+  return out;
+}
+
+/** Pop a padlock badge open and fade it away. True if it was still shut. */
+function openBadge(badge, instant) {
+  if (!badge || badge.classList.contains('opening')) return false;
+  if (instant) { badge.remove(); return true; }
+  badge.innerHTML = padlockSVG({ open: true });
+  badge.classList.add('opening');
+  setTimeout(() => badge.remove(), 900);
+  return true;
+}
+
+/**
+ * The player pressed an animal that can't move yet: wiggle it and draw the
+ * eye to the reason (its snowflakes pulse, or the key carriers glint).
+ */
+export function nudgeStuck(b, blocks) {
+  const el = document.getElementById('bg-' + b.id);
+  if (!el) return;
+  const again = (node, cls, ms) => {
+    if (!node) return;
+    node.classList.remove(cls);
+    void node.offsetWidth;
+    node.classList.add(cls);
+    setTimeout(() => node.classList.remove(cls), ms);
+  };
+  again(el, 'shiver', 520);
+  if (el.classList.contains('frozen')) again(el.querySelector('.pips'), 'pulse', 700);
+  else {
+    again(el.querySelector('.block-lock'), 'pulse', 700);
+    for (const k of blocks.filter(x => x.key)) again(document.querySelector('#bg-' + CSS.escape(k.id) + ' .block-key'), 'glint', 1100);
   }
 }
 

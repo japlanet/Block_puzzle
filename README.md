@@ -56,7 +56,8 @@ Open [`editor.html`](editor.html) in your browser (the deployed URL also works: 
 
 - Click-to-paint block cells, one color at a time
 - Gate tool with a size selector — click on any edge slot
-- Wall tool for immovable cells
+- Wall tool for immovable cells, and a "Cut out" tool that removes cells to give the board a shape
+- Frozen / key / padlock options for animals, and padlocked doors
 - Live validation (gate overlaps, orphan colors, off-board gates)
 - "Test solve" — runs the game's own hint engine to confirm the puzzle is solvable
 - "Play this level" — opens the game with your level so you can feel it before committing
@@ -82,7 +83,9 @@ Open [`data/levels.json`](data/levels.json), copy an existing level object, past
       "col": 1, "row": 1,    // anchor cell for the block (top-left of the shape)
       "shape": [[0,0],[1,0]],// [dc, dr] offsets from the anchor. Shorthand arrays preferred; legacy {dc,dr} objects still work.
       "color": "red",        // red | blue | green | yellow | purple | orange | pink | teal
-      "dir": "free"          // free | h (horizontal only) | v (vertical only)
+      "dir": "free",         // free | h (horizontal only) | v (vertical only)
+      "ice": 2,              // optional — frozen until 2 animals (any) have gone home
+      "key": true            // optional — carries the key (or "lock": true — padlocked until every key is home)
     }
   ],
   "gates": [
@@ -90,15 +93,30 @@ Open [`data/levels.json`](data/levels.json), copy an existing level object, past
       "side": "right",       // right | left | top | bottom
       "color": "red",        // must match at least one block's color
       "size": 2,              // how many cells wide the opening is
-      "exit_row": 3           // for right/left gates
-      // "exit_col": 4        // for top/bottom gates
+      "exit_row": 3,          // for right/left gates
+      // "exit_col": 4,       // for top/bottom gates
+      "lock": true            // optional — padlocked door, opens when every key is home
     }
   ],
-  "walls": [                 // optional — immovable cells
+  "walls": [                 // optional — immovable cells (drawn as rocks)
     { "col": 3, "row": 3 }
+  ],
+  "holes": [                 // optional — cells cut out of the board, which gives it its shape
+    { "col": 0, "row": 0 }
   ]
 }
 ```
+
+A gate sits on the outermost board cell of its rows (left/right) or columns (top/bottom). On a shaped board that can be an inner edge, such as the inside corner of an L; every cell the gate spans must share that same edge.
+
+### Special animals
+
+Picture-only, so they work for children who can't read:
+
+- **Frozen** (`"ice": N`): the animal sits in an ice sheet with N snowflakes. Each animal that goes home melts one; when they're all gone the ice shatters and it can move. Pressing it while frozen makes it shiver and its snowflakes pulse.
+- **Key and padlock** (`"key": true` on an animal, `"lock": true` on animals or gates): padlocked animals and doors stay shut until every key carrier has gone home, then the padlocks spring open. An animal already waiting at a door that opens (or thaws there) goes home by itself. Pressing a padlocked animal wiggles its padlock and makes the key glint.
+
+Levels 11-60 bring these in gradually: frozen animals from level 20, a padlocked door from 28, a padlocked animal from 32.
 
 ### Colors and animals
 
@@ -130,7 +148,18 @@ python3 tools/audit.py                 # all levels; exit code 1 if any is broke
 python3 tools/audit.py --show 22,23    # also print an ASCII map of those levels
 ```
 
-A level reported as `stuck` has a block that can't reach its gate even on an empty board (walled in, or a locked-direction block that isn't lined up with its gate). `tools/designs.py` holds the hand-drawn ASCII sources for the shaped levels (31, 44, 47, 49, 57, 60) and can regenerate them.
+A level reported as `stuck` has a block that can't reach its gate even on an empty board (walled in, or a locked-direction block that isn't lined up with its gate). `invalid` means a structural problem (overlapping doors, a door off the board's edge, a padlock with no key, ...).
+
+### Generating levels
+
+Levels 11-60 come from `tools/generate.py`. Its `PLAN` gives each level a board shape (hand-drawn in `tools/shapes.py`: heart, house, fish, cat, butterfly, castle, ...), a mirror/flip/rotation, and which special animals to use. For each level it places random pieces from a wide set (dominoes to pentominoes and 2x3 blocks), puts doors on every side, proves the level solvable with the audit's search, and keeps a candidate whose solution length fits the difficulty curve (about 17 moves at level 11 rising to about 22 at level 60, 8-10 animals).
+
+```sh
+python3 tools/generate.py --only 23,40    # regenerate just these levels (prints maps)
+python3 tools/generate.py --only 23 --seed 5 --apply   # try another draw and write it into data/levels.json
+```
+
+To change a level's shape or special animals, edit its line in `PLAN` and regenerate it.
 
 ### Shape cookbook
 
@@ -171,14 +200,16 @@ Game/
 │   ├── audio.js               # synth music + SFX
 │   ├── render.js              # board/block/gate rendering
 │   ├── critters.js            # SVG animal heads (moods, blinking)
+│   ├── badges.js              # SVG snowflake, key and padlock badges
 │   ├── input.js               # pointer drag with smooth sub-cell motion
 │   ├── effects.js             # bubbles, fireworks, exit particles
 │   └── ui.js                  # tutorial, level select, win overlay, toasts
 ├── data/
-│   └── levels.json            # 60 pretty-printed levels, ~1700 lines
+│   └── levels.json            # 60 pretty-printed levels, ~2500 lines
 ├── tools/
 │   ├── audit.py               # solvability audit for every level
-│   ├── designs.py             # ASCII sources for the shaped levels
+│   ├── generate.py            # generates levels 11-60 (see PLAN)
+│   ├── shapes.py              # board shapes and piece shapes for the generator
 │   └── levelfmt.py            # writes levels.json in its compact style
 └── icons/
     ├── icon.svg               # main source art

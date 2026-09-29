@@ -20,16 +20,17 @@ def dump_level(lv, indent='  '):
     for i, b in enumerate(lv['blocks']):
         out.append(f'{indent}    ' + _inline(b) + (',' if i < len(lv['blocks']) - 1 else ''))
     out.append(f'{indent}  ],')
-    walls = lv.get('walls') or []
+    lists = [(k, lv.get(k) or []) for k in ('walls', 'holes')]
+    lists = [(k, v) for k, v in lists if v]
     out.append(f'{indent}  "gates": [')
     for i, g in enumerate(lv['gates']):
         out.append(f'{indent}    ' + _inline(g) + (',' if i < len(lv['gates']) - 1 else ''))
-    out.append(f'{indent}  ]' + (',' if walls else ''))
-    if walls:
-        out.append(f'{indent}  "walls": [')
-        for i, w in enumerate(walls):
-            out.append(f'{indent}    ' + _inline(w) + (',' if i < len(walls) - 1 else ''))
-        out.append(f'{indent}  ]')
+    out.append(f'{indent}  ]' + (',' if lists else ''))
+    for li, (k, cells) in enumerate(lists):
+        out.append(f'{indent}  "{k}": [')
+        for i, w in enumerate(cells):
+            out.append(f'{indent}    ' + _inline(w) + (',' if i < len(cells) - 1 else ''))
+        out.append(f'{indent}  ]' + (',' if li < len(lists) - 1 else ''))
     out.append(indent + '}')
     return '\n'.join(out)
 

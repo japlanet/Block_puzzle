@@ -1,9 +1,9 @@
 // Entry point. Wires modules together and runs the game loop.
 
 import { state, getSavedLevelIdx, recordLevelComplete, clearProgress, loadSoundPref, saveSoundPref } from './state.js';
-import { loadLevels, cloneBlocks } from './levels.js';
-import { atGate } from './geometry.js';
-import { renderBoard, animateExit, clearBlocks } from './render.js';
+import { loadLevels, cloneBlocks, normalizeLevel } from './levels.js';
+import { atGate, isFree, gateOpen } from './geometry.js';
+import { renderBoard, animateExit, clearBlocks, refreshStatus } from './render.js';
 import { critterSVG } from './critters.js';
 import { wireBlock, setOnRelease, refreshBlockClasses } from './input.js';
 import { initAudio, toggleSound, isSoundOn, playSfx, resumeIfSuspended } from './audio.js';
@@ -69,48 +69,63 @@ function nextLevel() {
   initLevel(next);
 }
 
-/** Check if any live block now sits on its gate; exit it if so. */
-function checkGatesAndWin(releasedBlock) {
-  // Collect all exits this release triggers (a block can only match one gate by color).
-  const exits = [];
-  for (const b of state.blocks) {
-    for (const g of state.level.gates) {
-      if (b.color === g.color && atGate(b, g, state.level)) {
-        exits.push({ block: b, gate: g });
-        break;
-      }
+// Delay between waves of animals going home: when the key animal leaves, a
+// door unlocks, and an animal already waiting there follows a moment later.
+const WAVE_MS = 420;
+
+/**
+ * Send home every animal that sits at an open door of its colour, then keep
+ * going while that frees more (ice melts, padlocks open). The game state
+ * updates at once; the animations play in waves.
+ */
+function checkGatesAndWin() {
+  const gen = levelGen;
+  let wave = 0;
+  for (;;) {
+    const exits = [];
+    for (const b of state.blocks) {
+      if (!isFree(b, state.level, state.blocks)) continue;
+      const gi = state.level.gates.findIndex(g =>
+        g.color === b.color && gateOpen(g, state.level, state.blocks) && atGate(b, g, state.level));
+      if (gi >= 0) exits.push({ block: b, gate: state.level.gates[gi], gi });
     }
+    if (exits.length === 0) break;
+    // Remove from game state immediately (animations continue on the DOM nodes).
+    const gone = new Set(exits.map(e => e.block.id));
+    state.blocks = state.blocks.filter(x => !gone.has(x.id));
+    if (gone.has(state.selectedId)) state.selectedId = null;
+    const blocksNow = state.blocks;
+    const run = () => {
+      if (gen !== levelGen) return;
+      for (const { block, gate, gi } of exits) {
+        playSfx('exit', { color: block.color });
+        // Visual particle burst at the gate location.
+        const gateEl = document.querySelector(`.gate[data-gate-index="${gi}"]`);
+        if (gateEl) exitBurst(gateEl.getBoundingClientRect(), block.color);
+        animateExit(block, gate);
+      }
+      // Melt snowflakes / open padlocks to match, after the exit jingle starts.
+      setTimeout(() => {
+        if (gen !== levelGen) return;
+        const changed = refreshStatus(state.level, blocksNow);
+        if (changed.unlocked) playSfx('unlock');
+        else if (changed.thawed) playSfx('thaw');
+        else if (changed.cracked) playSfx('crack');
+      }, 180);
+    };
+    if (wave === 0) run(); else setTimeout(run, wave * WAVE_MS);
+    wave++;
   }
-  if (exits.length === 0) return;
-
-  // Run exit animations in parallel.
-  for (const { block, gate } of exits) {
-    playSfx('exit', { color: block.color });
-    // Visual particle burst at the gate location.
-    const gateEl = findGateElement(gate);
-    if (gateEl) exitBurst(gateEl.getBoundingClientRect(), block.color);
-    animateExit(block, gate);
-    // Remove from game state immediately (animation continues on DOM node).
-    state.blocks = state.blocks.filter(x => x.id !== block.id);
-    if (state.selectedId === block.id) state.selectedId = null;
-  }
-
-  if (state.blocks.length > 0) return;
+  if (wave === 0 || state.blocks.length > 0) return;
 
   // Level solved: save the stars right away (so leaving mid-celebration can't
   // lose the win), then celebrate once the exit animations finish — unless
   // the player has moved on to another level (or restarted) by then.
-  const gen = levelGen;
   const stars = computeStars();
   recordLevelComplete(state.levelIndex, stars);
   setTimeout(() => {
     if (gen === levelGen) showWin(stars, gen);
-  }, 460);
-}
-
-function findGateElement(gate) {
-  return [...document.querySelectorAll('.gate')]
-    .find(el => el.dataset.color === gate.color && el.dataset.side === gate.side);
+  }, 460 + (wave - 1) * WAVE_MS);
 }
 
 function computeStars() {
@@ -135,7 +150,7 @@ setOnRelease((block, moved) => {
     updateMoveCount();
     if (state.moveCount % 4 === 0 && state.moveCount > 0) showToast(pickCheer());
   }
-  checkGatesAndWin(block);
+  checkGatesAndWin();
 });
 
 // ── Button wiring ───────────────────────────────────────────────
@@ -230,13 +245,7 @@ function loadTestLevel() {
   try {
     const raw = localStorage.getItem(TEST_KEY);
     if (!raw) return null;
-    const lv = JSON.parse(raw);
-    // Normalize shape entries so {dc,dr} → [dc,dr] matches our internal format.
-    for (const b of (lv.blocks || [])) {
-      b.shape = b.shape.map(p => Array.isArray(p) ? [p[0], p[1]] : [p.dc, p.dr]);
-      if (!b.dir) b.dir = 'free';
-    }
-    return lv;
+    return normalizeLevel(JSON.parse(raw));
   } catch (e) { return null; }
 }
 
