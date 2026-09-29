@@ -170,12 +170,14 @@ function wireButtons() {
     if (!state._audioInited) { initAudio(); state._audioInited = true; }
     playSfx('tap');
     openLevelSelect(idx => initLevel(idx));
+    showVersion();
   });
   document.getElementById('resetBtn').addEventListener('click', () => {
     if (!state._audioInited) { initAudio(); state._audioInited = true; }
     resetLevel();
   });
   document.getElementById('lsx').addEventListener('click', () => closeLevelSelect());
+  document.getElementById('updateBtn').addEventListener('click', () => checkForUpdate());
   wireHoldToReset();
   document.getElementById('ls').addEventListener('click', e => {
     if (e.target.id === 'ls') closeLevelSelect();
@@ -303,6 +305,10 @@ async function boot() {
 }
 
 // ── Offline / updates ───────────────────────────────────────────
+// All the games share japlanet.github.io, so only ever touch this game's caches.
+const CACHE_PREFIX = 'animal-escape-';
+let swReg = null;
+
 function registerServiceWorker() {
   if (!('serviceWorker' in navigator)) return;
 
@@ -316,15 +322,76 @@ function registerServiceWorker() {
     setTimeout(() => window.location.reload(), 600);
   });
 
-  navigator.serviceWorker.register('sw.js')
+  // updateViaCache 'none': GitHub Pages lets browsers cache sw.js for 10
+  // minutes; update checks must always ask the network.
+  navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' })
     .then(reg => {
+      swReg = reg;
       // Check for a newer sw.js each time the app comes back to the foreground
-      // (installed PWAs can stay open for days).
+      // or is restored, and every half hour while it stays open (installed
+      // PWAs can stay open for days).
+      const check = () => reg.update().catch(() => {});
       document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') reg.update().catch(() => {});
+        if (document.visibilityState === 'visible') check();
       });
+      window.addEventListener('pageshow', check);
+      setInterval(() => { if (document.visibilityState === 'visible') check(); }, 30 * 60 * 1000);
     })
     .catch(err => console.warn('SW register failed:', err));
+}
+
+/** The version this page is running, from its service worker (null if none yet). */
+function runningVersion() {
+  const sw = navigator.serviceWorker && navigator.serviceWorker.controller;
+  if (!sw) return Promise.resolve(null);
+  return new Promise(resolve => {
+    const ch = new MessageChannel();
+    const timer = setTimeout(() => resolve(null), 1500);
+    ch.port1.onmessage = e => { clearTimeout(timer); resolve(e.data); };
+    sw.postMessage('version', [ch.port2]);
+  });
+}
+
+/** Show the running version under the level grid (for grown-ups checking an update). */
+async function showVersion() {
+  const v = await runningVersion();
+  const el = document.getElementById('appVersion');
+  if (el) el.textContent = v ? 'Version ' + v.replace(CACHE_PREFIX + 'v', '') : '';
+}
+
+/**
+ * "Check for update" in the level select. Asks the website which version is
+ * current; if it's newer than the running one, installs it (the service
+ * worker takes over and the controllerchange handler reloads). If that hasn't
+ * happened within 10 s, clears this game's caches and reloads from the
+ * network. Nothing is cleared unless the website answered, so pressing it
+ * offline can't leave the game unable to start.
+ */
+async function checkForUpdate() {
+  const btn = document.getElementById('updateBtn');
+  if (btn.disabled) return;
+  btn.disabled = true;
+  btn.textContent = '⏳ Checking…';
+  const done = msg => { btn.disabled = false; btn.textContent = '🔄 Check for update'; if (msg) showToast(msg); };
+  let latest = null;
+  try {
+    const res = await fetch('sw.js?check=' + Date.now(), { cache: 'no-store' });
+    if (res.ok) latest = ((await res.text()).match(/CACHE_VERSION = '([^']+)'/) || [])[1] || null;
+  } catch (e) { /* offline */ }
+  if (!latest) return done("Can't reach the game's website. Try again when online.");
+  const running = await runningVersion();
+  if (running === latest) return done('Up to date ✓');
+  btn.textContent = '⏳ Updating…';
+  try { if (swReg) await swReg.update(); } catch (e) {}
+  setTimeout(hardRefresh, 10000);
+}
+
+async function hardRefresh() {
+  try {
+    for (const k of await caches.keys()) if (k.startsWith(CACHE_PREFIX)) await caches.delete(k);
+    if (swReg) await swReg.unregister();
+  } catch (e) { console.warn('[update] hard refresh:', e); }
+  window.location.reload();
 }
 
 boot();

@@ -6,7 +6,7 @@
 // always opens offline. Bump CACHE_VERSION whenever you deploy a change — the
 // old cache is deleted on activate and the page reloads itself (see main.js).
 
-const CACHE_VERSION = 'animal-escape-v8';
+const CACHE_VERSION = 'animal-escape-v9';
 // All the games share japlanet.github.io and so share one set of caches: only
 // ever delete this game's own old caches, never another game's.
 const CACHE_PREFIX = 'animal-escape-';
@@ -68,11 +68,19 @@ self.addEventListener('activate', event => {
   );
 });
 
+// The page asks which version is running (shown in the level select).
+self.addEventListener('message', event => {
+  if (event.data === 'version' && event.ports[0]) event.ports[0].postMessage(CACHE_VERSION);
+});
+
 self.addEventListener('fetch', event => {
   const req = event.request;
   if (req.method !== 'GET') return;
   // Only handle our own origin (leave analytics, extensions, etc. alone).
-  if (new URL(req.url).origin !== self.location.origin) return;
+  const url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
+  // The "Check for update" button reads sw.js from the network; never cache it.
+  if (url.pathname.endsWith('/sw.js')) return;
 
   event.respondWith(
     // ignoreSearch: "index.html?test=1" (editor test-play) still hits the cache.

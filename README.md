@@ -27,7 +27,9 @@ Open <http://localhost:8080> and play.
 3. Wait ~60 s. Your URL will be `https://<your-user>.github.io/<repo-name>/`.
 4. Open that URL on the iPad and follow "Install on iPad" above.
 
-**To update:** bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) and push. After Pages redeploys (~30 s), the next launch of the app (or the next time it's brought to the foreground) downloads the new version, shows an "Updated!" toast, and reloads itself.
+**To update:** bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) and push. After Pages redeploys (~30 s), the next launch of the app (or the next time it's brought to the foreground, or within half an hour while it stays open) downloads the new version, shows an "Updated!" toast, and reloads itself.
+
+**To update an iPad right now:** open the level map (🗺️) and tap **🔄 Check for update** at the bottom. It shows "Up to date ✓" or installs the new version and reloads; the running version is shown underneath ("Version 9"). If the normal update doesn't take over within 10 seconds it clears this game's cache (only this game's) and reloads from the website. It does nothing offline, so it can't leave the game unable to start.
 
 ## Playing offline
 
@@ -224,7 +226,7 @@ Game/
 ## Troubleshooting
 
 - **Icons look wrong on the home screen**: delete the app from the home screen and re-add it. iOS caches the first icon it sees aggressively.
-- **Changes don't appear after deploy**: bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) before pushing. The service worker will invalidate the old cache and reload the game on next load.
+- **Changes don't appear after deploy**: bump `CACHE_VERSION` in [`sw.js`](sw.js) (e.g. `v3` → `v4`) before pushing. The service worker will invalidate the old cache and reload the game on next load. To get it on a device straight away, tap **🔄 Check for update** in the level map; no need to delete and re-add the home-screen icon.
 - **Game won't open offline**: it needs one online visit first so the service worker can cache everything. Also make sure you're on HTTPS or localhost — service workers don't run from `file://`.
 - **Audio won't play on iPad**: iOS requires a user gesture before audio can start. Tap anything once (the sound button is a good target) and the engine unlocks.
 - **`fetch` errors loading levels**: make sure you're running a server (not opening `index.html` via `file://`). See "Play locally" above.
